@@ -24,13 +24,17 @@ const usernameInput = document.getElementById("usernameInput");
 const loadBtn = document.getElementById("loadBtn");
 const filterButtons = document.querySelectorAll(".filter-btn");
 
-loadBtn.addEventListener("click", loadUserBinder);
+if (loadBtn) {
+  loadBtn.addEventListener("click", loadUserBinder);
+}
 
-usernameInput.addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    loadUserBinder();
-  }
-});
+if (usernameInput) {
+  usernameInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      loadUserBinder();
+    }
+  });
+}
 
 filterButtons.forEach(btn => {
   btn.addEventListener("click", function () {
@@ -49,23 +53,25 @@ fetch("ygo_collection.json")
     const urlParams = new URLSearchParams(window.location.search);
     const userFromUrl = urlParams.get("user");
 
-    if (userFromUrl) {
+    if (userFromUrl && usernameInput) {
       usernameInput.value = userFromUrl;
       loadUserBinder();
-    } else {
+    } else if (statusText) {
       statusText.textContent = "Collection data loaded. Enter a viewer name to load their collection.";
     }
   })
   .catch(err => {
     console.error(err);
-    statusText.textContent = "Could not load ygo_collection.json";
+    if (statusText) statusText.textContent = "Could not load ygo_collection.json";
   });
 
 function loadUserBinder() {
+  if (!usernameInput) return;
+
   const username = usernameInput.value.trim();
 
   if (!username) {
-    statusText.textContent = "Please enter a viewer name.";
+    if (statusText) statusText.textContent = "Please enter a viewer name.";
     return;
   }
 
@@ -77,14 +83,14 @@ function loadUserBinder() {
   });
 
   if (currentUserCards.length === 0) {
-    pageTitle.textContent = username + "'s Binder";
-    totalCards.textContent = "0";
-    bestCard.textContent = "None";
-    bestRarity.textContent = "-";
-    rarityBreakdown.innerHTML = "";
-    cardGrid.innerHTML = '<div class="empty-state">No cards found for this viewer.</div>';
-    showingText.textContent = "Showing 0 cards";
-    statusText.textContent = "No collection found for " + username;
+    if (pageTitle) pageTitle.textContent = username + "'s Binder";
+    if (totalCards) totalCards.textContent = "0";
+    if (bestCard) bestCard.textContent = "None";
+    if (bestRarity) bestRarity.textContent = "-";
+    if (rarityBreakdown) rarityBreakdown.innerHTML = "";
+    if (cardGrid) cardGrid.innerHTML = '<div class="empty-state">No cards found for this viewer.</div>';
+    if (showingText) showingText.textContent = "Showing 0 cards";
+    if (statusText) statusText.textContent = "No collection found for " + username;
     return;
   }
 
@@ -96,11 +102,11 @@ function loadUserBinder() {
 
   const best = currentUserCards[0];
 
-  pageTitle.textContent = username + "'s Binder";
-  totalCards.textContent = String(currentUserCards.length);
-  bestCard.textContent = best.cardName || "Unknown";
-  bestRarity.textContent = best.rarity || "-";
-  statusText.textContent = "Loaded binder for " + username;
+  if (pageTitle) pageTitle.textContent = username + "'s Binder";
+  if (totalCards) totalCards.textContent = String(currentUserCards.length);
+  if (bestCard) bestCard.textContent = best.cardName || "Unknown";
+  if (bestRarity) bestRarity.textContent = best.rarity || "-";
+  if (statusText) statusText.textContent = "Loaded binder for " + username;
 
   renderRarityBreakdown();
   renderCards();
@@ -110,6 +116,8 @@ function loadUserBinder() {
 }
 
 function renderRarityBreakdown() {
+  if (!rarityBreakdown) return;
+
   const counts = {
     Common: 0,
     Rare: 0,
@@ -149,13 +157,15 @@ function renderRarityBreakdown() {
 }
 
 function renderCards() {
+  if (!cardGrid) return;
+
   let filtered = currentUserCards;
 
   if (currentFilter !== "All") {
     filtered = currentUserCards.filter(card => card.rarity === currentFilter);
   }
 
-  showingText.textContent = "Showing " + filtered.length + " cards";
+  if (showingText) showingText.textContent = "Showing " + filtered.length + " cards";
 
   if (filtered.length === 0) {
     cardGrid.innerHTML = '<div class="empty-state">No cards match this filter.</div>';
