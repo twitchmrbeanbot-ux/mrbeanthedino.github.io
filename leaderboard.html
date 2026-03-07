@@ -1,1 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YGO Leaderboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-left">
+        <p class="eyebrow">Yu-Gi-Oh Viewer Leaderboard</p>
+        <h1>Top Collectors</h1>
+        <p class="subtext">
+          See who owns the most cards and who has the strongest pulls.
+        </p>
+      </div>
+    </header>
 
+    <section class="panel">
+      <div class="binder-header">
+        <h2>Leaderboard</h2>
+        <span id="totalUsersText">Loading...</span>
+      </div>
+
+      <div id="leaderboardTable"></div>
+    </section>
+  </div>
+
+  <script src="leaderboard.js"></script>
+</body>
+</html>
