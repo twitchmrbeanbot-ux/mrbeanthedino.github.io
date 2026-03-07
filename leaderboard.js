@@ -1,67 +1,59 @@
-window.addEventListener("load", async function () {
-  const leaderboardBody = document.getElementById("leaderboard-body");
-  const leaderboardStatus = document.getElementById("leaderboard-status");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YGO Pack Leaderboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="brand-block">
+        <div class="eyebrow">Yu-Gi-Oh Viewer Project</div>
+        <h1>Pack Leaderboard</h1>
+        <p class="subtitle">Track pack openings and jump directly into a viewer’s binder.</p>
+      </div>
 
-  try {
-    const response = await fetch("./ygo_stats.json?t=" + Date.now());
+      <nav class="site-nav">
+        <a href="index.html">Binder</a>
+        <a href="leaderboard.html" class="active">Leaderboard</a>
+      </nav>
+    </header>
 
-    if (!response.ok) {
-      throw new Error("Failed to load ygo_stats.json");
-    }
+    <main class="panel">
+      <div class="panel-header">
+        <h2>Top Pack Openers</h2>
+        <p class="panel-copy">Click a viewer name to open their binder collection.</p>
+      </div>
 
-    const data = await response.json();
-    console.log("Loaded stats JSON:", data);
+      <p id="leaderboard-status">Loading leaderboard...</p>
 
-    if (!data.leaderboard || !Array.isArray(data.leaderboard)) {
-      throw new Error("No leaderboard array found in ygo_stats.json");
-    }
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Viewer</th>
+            <th>Packs Opened</th>
+            <th>Cards</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <tr>
+            <td colspan="4">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
 
-    const rankings = data.leaderboard
-      .slice()
-      .sort((a, b) => {
-        if ((b.packsOpened || 0) !== (a.packsOpened || 0)) {
-          return (b.packsOpened || 0) - (a.packsOpened || 0);
-        }
-        return (b.totalCards || 0) - (a.totalCards || 0);
-      });
+    <footer class="site-footer">
+      <p>
+        This fan-made project is for entertainment only and is not affiliated with or endorsed by Konami.
+        Yu-Gi-Oh! and related names/images belong to their respective owners.
+      </p>
+    </footer>
+  </div>
 
-    if (!rankings.length) {
-      leaderboardStatus.textContent = "No leaderboard data found.";
-      leaderboardBody.innerHTML = `
-        <tr>
-          <td colspan="4">No users found.</td>
-        </tr>
-      `;
-      return;
-    }
-
-    leaderboardStatus.style.display = "none";
-
-    leaderboardBody.innerHTML = rankings.map((user, index) => `
-      <tr>
-        <td>#${index + 1}</td>
-        <td>${escapeHtml(user.username || "Unknown User")}</td>
-        <td>${user.packsOpened || 0}</td>
-        <td>${user.totalCards || 0}</td>
-      </tr>
-    `).join("");
-
-  } catch (error) {
-    console.error("Leaderboard load error:", error);
-    leaderboardStatus.textContent = "Failed to load leaderboard.";
-    leaderboardBody.innerHTML = `
-      <tr>
-        <td colspan="4">Error loading leaderboard data.</td>
-      </tr>
-    `;
-  }
-});
-
-function escapeHtml(text) {
-  return String(text)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
+  <script src="./leaderboard.js"></script>
+</body>
+</html>
