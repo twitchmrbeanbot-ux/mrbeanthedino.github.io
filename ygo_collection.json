@@ -1,16 +1,3 @@
-﻿{
-  "cards": [
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"28570310","cardName":"Mythical Beast Garuda","rarity":"Ultra","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"28004531","cardName":"Rex, Freight Fur Hire","rarity":"Super","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"53265336","cardName":"Solfachord Scale","rarity":"Rare","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"300203004","cardName":"Hidden Parasite","rarity":"Common","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"64437633","cardName":"Aquamirror Illusion","rarity":"Super","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"72370114","cardName":"Geargiattacker","rarity":"Super","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"30411385","cardName":"Valkyrie Zweite","rarity":"Super","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"51531505","cardName":"Dragonpit Magician","rarity":"Super","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"57006589","cardName":"Energy-Absorbing Monolith","rarity":"Super","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"90844184","cardName":"Garma Sword","rarity":"Super","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"2625939","cardName":"Spool Code","rarity":"Super","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"55154344","cardName":"Ryu-Ge Realm - Wyrm Winds","rarity":"Super","dateAdded":"2026-03-07"}
-  ]
+{
+  "cards": []
 }
