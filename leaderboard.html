@@ -3,40 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YGO Leaderboard</title>
+  <title>YGO Pack Leaderboard</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="page">
+  <div class="site-shell">
     <header class="site-header">
-      <h1>Yu-Gi-Oh! Pack Leaderboard</h1>
-      <nav class="top-nav">
+      <div class="brand-block">
+        <div class="eyebrow">Yu-Gi-Oh Viewer Project</div>
+        <h1>Pack Leaderboard</h1>
+        <p class="subtitle">Track pack openings and click a viewer name to open their binder.</p>
+      </div>
+
+      <nav class="site-nav">
         <a href="index.html">Binder</a>
         <a href="leaderboard.html" class="active">Leaderboard</a>
       </nav>
     </header>
 
-    <main class="leaderboard-container">
-      <p id="leaderboard-status">Loading...</p>
+    <main class="binder-layout">
+      <section class="panel">
+        <div class="section-head">
+          <h2>Top Pack Openers</h2>
+          <div class="section-meta">Live viewer rankings</div>
+        </div>
 
-      <table class="leaderboard-table">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>User</th>
-            <th>Packs Opened</th>
-            <th>Cards</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-body">
-          <tr>
-            <td colspan="4">Loading...</td>
-          </tr>
-        </tbody>
-      </table>
+        <p id="leaderboard-status">Loading leaderboard...</p>
+
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Viewer</th>
+              <th>Packs Opened</th>
+              <th>Cards</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr>
+              <td colspan="4">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </main>
+
+    <footer class="site-footer">
+      <p>
+        This fan-made project is for entertainment only and is not affiliated with or endorsed by Konami.
+        Yu-Gi-Oh! and related names/images belong to their respective owners.
+      </p>
+    </footer>
   </div>
 
-  <script src="leaderboard.js"></script>
+  <script src="./leaderboard.js"></script>
 </body>
 </html>
