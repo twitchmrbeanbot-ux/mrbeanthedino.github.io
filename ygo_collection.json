@@ -1,12 +1,6 @@
-{
+﻿{
   "cards": [
-    {
-      "userId": "123456",
-      "username": "Shadow_Bane97",
-      "cardId": "46986414",
-      "cardName": "Dark Magician",
-      "rarity": "Ultra",
-      "dateAdded": "2026-03-06"
-    }
+    {"userId":"694889890","username":"MrBeanTheDino","cardId":"49456901","cardName":"Number C104: Umbral Horror Masquerade","rarity":"Super","dateAdded":"2026-03-06"},
+    {"userId":"694889890","username":"MrBeanTheDino","cardId":"86532744","cardName":"Number S39: Utopia Prime","rarity":"Super","dateAdded":"2026-03-06"}
   ]
 }
