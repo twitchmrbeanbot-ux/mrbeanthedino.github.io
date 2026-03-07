@@ -3,88 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yu-Gi-Oh Binder</title>
+  <title>YGO Leaderboard</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="page">
 
     <nav class="site-nav">
-      <a class="nav-link active" href="./index.html">Binder</a>
-      <a class="nav-link" href="./leaderboard.html">Leaderboard</a>
+      <a class="nav-link" href="index.html">Binder</a>
+      <a class="nav-link active" href="leaderboard.html">Leaderboard</a>
     </nav>
 
     <header class="hero">
       <div class="hero-left">
-        <p class="eyebrow">Yu-Gi-Oh Viewer Binder</p>
-        <h1 id="pageTitle">Yu-Gi-Oh Collection Binder</h1>
+        <p class="eyebrow">Yu-Gi-Oh Viewer Leaderboard</p>
+        <h1>Top Collectors</h1>
         <p class="subtext">
-          Search a viewer name to load their owned cards, rarity totals, and best pull.
+          See who owns the most cards and who has the strongest pulls.
         </p>
-      </div>
-
-      <div class="hero-right stats-top">
-        <div class="stat-card">
-          <span class="stat-label">Cards Owned</span>
-          <span class="stat-value" id="totalCards">0</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">Best Card</span>
-          <span class="stat-value small" id="bestCard">None</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">Best Rarity</span>
-          <span class="stat-value" id="bestRarity">-</span>
-        </div>
       </div>
     </header>
 
-    <section class="controls">
-      <div class="search-box">
-        <label for="usernameInput">Viewer Name</label>
-        <div class="search-row">
-          <input type="text" id="usernameInput" placeholder="Enter Twitch username" />
-          <button id="loadBtn">Load Binder</button>
-        </div>
+    <section class="panel">
+      <div class="binder-header">
+        <h2>Leaderboard</h2>
+        <span id="totalUsersText">Loading...</span>
       </div>
 
-      <div class="helper-text" id="statusText">
-        Collection loaded. Enter a viewer name.
-      </div>
-    </section>
-
-    <section class="content-grid">
-      <aside class="sidebar">
-        <div class="panel">
-          <h2>Rarity Breakdown</h2>
-          <div id="rarityBreakdown" class="rarity-list"></div>
-        </div>
-
-        <div class="panel">
-          <h2>Filter</h2>
-          <div class="filter-buttons">
-            <button class="filter-btn active" data-rarity="All">All</button>
-            <button class="filter-btn" data-rarity="Common">Common</button>
-            <button class="filter-btn" data-rarity="Rare">Rare</button>
-            <button class="filter-btn" data-rarity="Super">Super</button>
-            <button class="filter-btn" data-rarity="Ultra">Ultra</button>
-            <button class="filter-btn" data-rarity="Secret">Secret</button>
-            <button class="filter-btn" data-rarity="Collector">Collector</button>
-          </div>
-        </div>
-      </aside>
-
-      <main class="main-panel panel">
-        <div class="binder-header">
-          <h2>Binder Grid</h2>
-          <span id="showingText">Showing 0 cards</span>
-        </div>
-
-        <div id="cardGrid" class="card-grid"></div>
-      </main>
+      <div id="leaderboardTable"></div>
     </section>
   </div>
 
-  <script src="script.js"></script>
+  <script src="leaderboard.js"></script>
 </body>
 </html>
