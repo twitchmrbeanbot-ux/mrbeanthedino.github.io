@@ -40,7 +40,7 @@ filterButtons.forEach(btn => {
   });
 });
 
-fetch("mrbeanthedino.github.io/ygo_collection.json")
+ffetch("https://twitchmrbeanbot-ux.github.io/mrbeanthedino.github.io/ygo_collection.json")
   .then(response => response.json())
   .then(data => {
     allCards = data.cards || [];
@@ -196,5 +196,6 @@ function getGlowClass(rarity) {
     default: return "glow-common";
   }
 }
+
 
 
