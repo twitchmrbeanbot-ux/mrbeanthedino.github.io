@@ -1,12 +1,16 @@
+console.log("NEW script.js loaded v11");
+
 let allCards = [];
 let filteredCards = [];
 let activeViewer = "";
 let activeFilter = "All";
+let lastViewerSnapshot = "";
 
 window.addEventListener("load", async function () {
+  console.log("Binder page booted");
   wireUi();
   await tryAutoLoadFromQuery();
-  setInterval(refreshActiveViewer, 10000);
+  setInterval(checkForViewerChanges, 10000);
 });
 
 function wireUi() {
@@ -63,16 +67,43 @@ function loadViewerFromInput() {
   loadViewer(viewer, true);
 }
 
-async function refreshActiveViewer() {
+async function checkForViewerChanges() {
   if (!activeViewer) return;
-  await loadViewer(activeViewer, false);
+
+  try {
+    const response = await fetch("./ygo_collection.json?t=" + Date.now(), {
+      cache: "no-store"
+    });
+
+    if (!response.ok) return;
+
+    const data = await response.json();
+    const cards = Array.isArray(data.cards) ? data.cards : [];
+
+    const viewerCards = cards.filter(card =>
+      String(card.username || "").toLowerCase() === activeViewer.toLowerCase()
+    );
+
+    const snapshot = JSON.stringify(viewerCards);
+
+    if (lastViewerSnapshot && snapshot !== lastViewerSnapshot) {
+      console.log("Viewer collection changed, reloading page");
+      window.location.reload();
+      return;
+    }
+  } catch (error) {
+    console.error("Auto-refresh check failed:", error);
+  }
 }
 
 async function loadViewer(viewerName, updateUrlFlag) {
   const loadedMessage = document.getElementById("loadedMessage");
 
   try {
-    const response = await fetch("./ygo_collection.json?t=" + Date.now());
+    const response = await fetch("./ygo_collection.json?t=" + Date.now(), {
+      cache: "no-store"
+    });
+
     if (!response.ok) throw new Error("Failed to load ygo_collection.json");
 
     const data = await response.json();
@@ -82,6 +113,8 @@ async function loadViewer(viewerName, updateUrlFlag) {
     allCards = cards.filter(card =>
       String(card.username || "").toLowerCase() === viewerName.toLowerCase()
     );
+
+    lastViewerSnapshot = JSON.stringify(allCards);
 
     if (loadedMessage) {
       const now = new Date().toLocaleTimeString();
@@ -123,9 +156,7 @@ function updateSummary(viewerName, cards) {
 
   cards.forEach(card => {
     const rarity = normalizeRarity(card.rarity);
-    if (rarityCounts[rarity] !== undefined) {
-      rarityCounts[rarity]++;
-    }
+    if (rarityCounts[rarity] !== undefined) rarityCounts[rarity]++;
 
     if (!best || rarityRank(rarity) > rarityRank(normalizeRarity(best.rarity))) {
       best = card;
@@ -147,13 +178,9 @@ function updateSummary(viewerName, cards) {
 }
 
 function applyFilterAndRender() {
-  if (activeFilter === "All") {
-    filteredCards = allCards.slice();
-  } else {
-    filteredCards = allCards.filter(card =>
-      normalizeRarity(card.rarity) === activeFilter
-    );
-  }
+  filteredCards = activeFilter === "All"
+    ? allCards.slice()
+    : allCards.filter(card => normalizeRarity(card.rarity) === activeFilter);
 
   renderCards(filteredCards);
 }
@@ -186,12 +213,8 @@ function renderCards(cards) {
           loading="lazy"
           onerror="this.onerror=null;this.src='https://images.ygoprodeck.com/images/cards/back.jpg';"
         />
-        <div class="binder-card-name">
-          ${escapeHtml(card.cardName || "Unknown Card")}
-        </div>
-        <div class="binder-card-rarity ${rarityClass}">
-          ${escapeHtml(rarity)}
-        </div>
+        <div class="binder-card-name">${escapeHtml(card.cardName || "Unknown Card")}</div>
+        <div class="binder-card-rarity ${rarityClass}">${escapeHtml(rarity)}</div>
       </div>
     `;
   }).join("");
@@ -199,14 +222,12 @@ function renderCards(cards) {
 
 function normalizeRarity(rarity) {
   const value = String(rarity || "").trim().toLowerCase();
-
   if (value === "common") return "Common";
   if (value === "rare") return "Rare";
   if (value === "super") return "Super";
   if (value === "ultra") return "Ultra";
   if (value === "secret") return "Secret";
   if (value === "collector") return "Collector";
-
   return "Common";
 }
 
