@@ -169,14 +169,30 @@ function renderCards(cards) {
     return;
   }
 
-  grid.innerHTML = cards.map(card => `
-    <div class="binder-card">
-      <img src="./images/full/${card.cardId}.jpg" alt="${escapeHtml(card.cardName || "Card")}"
-           onerror="this.onerror=null;this.src='./images/placeholder.jpg';" />
-      <div class="binder-card-name">${escapeHtml(card.cardName || "Unknown Card")}</div>
-      <div class="binder-card-rarity">${escapeHtml(normalizeRarity(card.rarity))}</div>
-    </div>
-  `).join("");
+  grid.innerHTML = cards.map(card => {
+
+    // Use YGOProDeck image CDN
+    const imageUrl = `https://images.ygoprodeck.com/images/cards/${card.cardId}.jpg`;
+
+    return `
+      <div class="binder-card">
+        <img
+          src="${imageUrl}"
+          alt="${escapeHtml(card.cardName || "Card")}"
+          loading="lazy"
+          onerror="this.onerror=null;this.src='https://images.ygoprodeck.com/images/cards/back.jpg';"
+        />
+
+        <div class="binder-card-name">
+          ${escapeHtml(card.cardName || "Unknown Card")}
+        </div>
+
+        <div class="binder-card-rarity">
+          ${escapeHtml(normalizeRarity(card.rarity))}
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 function normalizeRarity(rarity) {
@@ -220,3 +236,4 @@ function escapeHtml(text) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
