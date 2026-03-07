@@ -10,9 +10,15 @@ const rarityRank = {
   Collector: 6
 };
 
-fetch("ygo_collection.json")
-  .then(response => response.json())
-  .then(data => {
+async function loadLeaderboard() {
+  try {
+    const response = await fetch("ygo_collection.json");
+
+    if (!response.ok) {
+      throw new Error("Failed to load ygo_collection.json");
+    }
+
+    const data = await response.json();
     const cards = data.cards || [];
     const users = {};
 
@@ -22,10 +28,10 @@ fetch("ygo_collection.json")
 
       if (!users[username]) {
         users[username] = {
-          username,
+          username: username,
           totalCards: 0,
           bestCard: "None",
-          bestRarity: "Common",
+          bestRarity: "-",
           bestRank: 0
         };
       }
@@ -35,7 +41,7 @@ fetch("ygo_collection.json")
       const rank = rarityRank[card.rarity] || 0;
       if (rank > users[username].bestRank) {
         users[username].bestRank = rank;
-        users[username].bestRarity = card.rarity || "Common";
+        users[username].bestRarity = card.rarity || "-";
         users[username].bestCard = card.cardName || "Unknown Card";
       }
     });
@@ -66,7 +72,7 @@ fetch("ygo_collection.json")
       html += `
         <div class="leaderboard-grid leaderboard-row">
           <div>#${index + 1}</div>
-          <div><a class="leaderboard-link" href="./?user=${encodeURIComponent(user.username)}">${user.username}</a></div>
+          <div><a class="leaderboard-link" href="./index.html?user=${encodeURIComponent(user.username)}">${user.username}</a></div>
           <div>${user.totalCards}</div>
           <div>${user.bestRarity}</div>
           <div>${user.bestCard}</div>
@@ -75,9 +81,11 @@ fetch("ygo_collection.json")
     });
 
     leaderboardTable.innerHTML = html;
-  })
-  .catch(err => {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     totalUsersText.textContent = "Error";
     leaderboardTable.innerHTML = '<div class="empty-state">Could not load leaderboard.</div>';
-  });
+  }
+}
+
+loadLeaderboard();
