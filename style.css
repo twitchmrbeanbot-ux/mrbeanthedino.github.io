@@ -20,11 +20,69 @@ body {
   color: var(--text);
   min-height: 100vh;
   background:
-    linear-gradient(rgba(4, 8, 20, 0.76), rgba(4, 8, 20, 0.88)),
+    linear-gradient(rgba(4, 8, 20, 0.74), rgba(4, 8, 20, 0.88)),
     url("./ygo-bg.jpg") center center / cover no-repeat fixed;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Animated duel-energy overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(120, 80, 255, 0.10), transparent 24%),
+    radial-gradient(circle at 80% 30%, rgba(255, 215, 100, 0.08), transparent 22%),
+    radial-gradient(circle at 50% 80%, rgba(70, 140, 255, 0.08), transparent 20%);
+  animation: auraShift 10s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(255,255,255,0.02) 20%,
+      transparent 40%,
+      rgba(255,255,255,0.02) 60%,
+      transparent 80%
+    );
+  mix-blend-mode: screen;
+  opacity: 0.45;
+  animation: shimmerBg 16s linear infinite;
+  z-index: 0;
+}
+
+@keyframes auraShift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(0, -10px, 0) scale(1.03);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmerBg {
+  0% {
+    transform: translateX(-8%);
+  }
+  100% {
+    transform: translateX(8%);
+  }
 }
 
 .site-shell {
+  position: relative;
+  z-index: 1;
   max-width: 1320px;
   margin: 0 auto;
   padding: 28px;
@@ -109,6 +167,8 @@ h1 {
 }
 
 .panel {
+  position: relative;
+  overflow: hidden;
   margin-bottom: 22px;
   padding: 22px;
   border-radius: 18px;
@@ -120,6 +180,20 @@ h1 {
   backdrop-filter: blur(5px);
 }
 
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    125deg,
+    rgba(255,255,255,0.03) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(255,255,255,0.02) 100%
+  );
+}
+
 .panel h2 {
   margin: 0 0 14px 0;
   color: var(--gold);
@@ -129,10 +203,6 @@ h1 {
 .panel-copy {
   margin: 0;
   color: var(--muted);
-}
-
-.binder-layout {
-  display: block;
 }
 
 .hero-panel {
@@ -178,10 +248,13 @@ button {
   font-weight: bold;
   font-size: 1rem;
   cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
 }
 
 button:hover {
   filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 0 14px rgba(140, 92, 255, 0.22);
 }
 
 .loaded-message {
@@ -248,9 +321,12 @@ button:hover {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 22px;
+  align-items: start;
 }
 
 .binder-card {
+  position: relative;
+  overflow: hidden;
   padding: 12px;
   border-radius: 16px;
   border: 1px solid rgba(255, 214, 110, 0.12);
@@ -258,14 +334,40 @@ button:hover {
   box-shadow:
     0 10px 24px rgba(0,0,0,0.34),
     0 0 10px rgba(255,210,100,0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  transform-origin: center center;
+}
+
+.binder-card::before {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,0.00) 35%,
+    rgba(255,255,255,0.20) 50%,
+    rgba(255,255,255,0.00) 65%,
+    transparent 100%
+  );
+  transform: translateX(-150%) rotate(8deg);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .binder-card:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    0 0 16px rgba(255, 214, 110, 0.16),
-    0 14px 30px rgba(0,0,0,0.4);
+  transform: translateY(-6px) scale(1.025);
+  z-index: 2;
+}
+
+.binder-card:hover::before {
+  opacity: 1;
+  animation: cardShine 0.9s ease;
+}
+
+@keyframes cardShine {
+  0% { transform: translateX(-150%) rotate(8deg); }
+  100% { transform: translateX(150%) rotate(8deg); }
 }
 
 .binder-card img {
@@ -273,6 +375,12 @@ button:hover {
   display: block;
   border-radius: 10px;
   margin-bottom: 10px;
+  transition: transform 0.22s ease, filter 0.22s ease;
+}
+
+.binder-card:hover img {
+  transform: scale(1.02);
+  filter: brightness(1.06) saturate(1.05);
 }
 
 .binder-card-name {
@@ -284,7 +392,101 @@ button:hover {
 }
 
 .binder-card-rarity {
+  display: inline-block;
   color: var(--muted);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: bold;
+  background: rgba(255,255,255,0.06);
+}
+
+/* Rarity borders + glow */
+.rarity-common {
+  border-color: rgba(220, 220, 220, 0.16);
+}
+
+.rarity-rare {
+  border-color: rgba(100, 160, 255, 0.35);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.34),
+    0 0 14px rgba(100, 160, 255, 0.14);
+}
+
+.rarity-super {
+  border-color: rgba(195, 125, 255, 0.35);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.34),
+    0 0 14px rgba(195, 125, 255, 0.16);
+}
+
+.rarity-ultra {
+  border-color: rgba(255, 212, 92, 0.45);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.34),
+    0 0 16px rgba(255, 212, 92, 0.18);
+}
+
+.rarity-secret {
+  border-color: rgba(255, 120, 190, 0.42);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.34),
+    0 0 14px rgba(255, 120, 190, 0.16),
+    0 0 22px rgba(90, 140, 255, 0.10);
+}
+
+.rarity-collector {
+  border-color: rgba(255, 235, 150, 0.55);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.34),
+    0 0 16px rgba(255, 235, 150, 0.18),
+    0 0 26px rgba(255, 255, 255, 0.08);
+}
+
+.rarity-secret:hover,
+.rarity-collector:hover {
+  animation: rarePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes rarePulse {
+  0% {
+    box-shadow:
+      0 10px 24px rgba(0,0,0,0.34),
+      0 0 14px rgba(255, 210, 90, 0.14);
+  }
+  50% {
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.38),
+      0 0 22px rgba(255, 210, 90, 0.28);
+  }
+  100% {
+    box-shadow:
+      0 10px 24px rgba(0,0,0,0.34),
+      0 0 14px rgba(255, 210, 90, 0.14);
+  }
+}
+
+.binder-card-rarity.rarity-common {
+  color: #ececec;
+}
+
+.binder-card-rarity.rarity-rare {
+  color: #7fb5ff;
+}
+
+.binder-card-rarity.rarity-super {
+  color: #d2a3ff;
+}
+
+.binder-card-rarity.rarity-ultra {
+  color: #ffd45c;
+}
+
+.binder-card-rarity.rarity-secret {
+  color: #ff9fd0;
+}
+
+.binder-card-rarity.rarity-collector {
+  color: #fff2b5;
 }
 
 #leaderboard-status {
@@ -336,6 +538,60 @@ button:hover {
 .viewer-link:hover {
   color: var(--gold);
   border-bottom-color: var(--gold);
+}
+
+/* Premium top 3 leaderboard */
+.leaderboard-table tbody tr:nth-child(1) {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 215, 100, 0.16),
+    rgba(255, 215, 100, 0.05)
+  );
+  box-shadow: inset 0 0 12px rgba(255, 215, 100, 0.20);
+  animation: championGlow 4s ease-in-out infinite;
+}
+
+.leaderboard-table tbody tr:nth-child(1) td {
+  color: #ffd95a;
+  font-weight: bold;
+}
+
+.leaderboard-table tbody tr:nth-child(2) {
+  background: linear-gradient(
+    90deg,
+    rgba(205, 215, 235, 0.12),
+    rgba(205, 215, 235, 0.03)
+  );
+}
+
+.leaderboard-table tbody tr:nth-child(2) td {
+  color: #e7eeff;
+  font-weight: bold;
+}
+
+.leaderboard-table tbody tr:nth-child(3) {
+  background: linear-gradient(
+    90deg,
+    rgba(210, 150, 95, 0.14),
+    rgba(210, 150, 95, 0.03)
+  );
+}
+
+.leaderboard-table tbody tr:nth-child(3) td {
+  color: #e5b48f;
+  font-weight: bold;
+}
+
+@keyframes championGlow {
+  0% {
+    box-shadow: inset 0 0 8px rgba(255, 215, 100, 0.14);
+  }
+  50% {
+    box-shadow: inset 0 0 18px rgba(255, 215, 100, 0.34);
+  }
+  100% {
+    box-shadow: inset 0 0 8px rgba(255, 215, 100, 0.14);
+  }
 }
 
 .site-footer {
@@ -394,321 +650,4 @@ button:hover {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 14px;
   }
-}
-/* ===== Leaderboard polish ===== */
-
-.leaderboard-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 16px;
-  overflow: hidden;
-  background: rgba(8, 12, 28, 0.78);
-  margin-top: 8px;
-}
-
-.leaderboard-table th,
-.leaderboard-table td {
-  padding: 16px 18px;
-  text-align: left;
-  font-size: 1.05rem;
-}
-
-.leaderboard-table th {
-  color: var(--gold);
-  background: rgba(255, 212, 92, 0.08);
-  border-bottom: 1px solid rgba(255, 224, 130, 0.2);
-}
-
-.leaderboard-table td {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.leaderboard-table tr:nth-child(even) {
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.leaderboard-table tr:hover {
-  background: rgba(255, 212, 92, 0.06);
-}
-
-#leaderboard-status {
-  margin: 0 0 16px 0;
-  font-size: 1.05rem;
-  color: var(--muted);
-}
-
-.viewer-link {
-  color: #ffffff;
-  font-weight: bold;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-}
-
-.viewer-link:hover {
-  color: var(--gold);
-  border-bottom-color: var(--gold);
-}
-/* ===== Leaderboard Top 3 Styling ===== */
-
-.leaderboard-table tbody tr:nth-child(1) {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 215, 100, 0.12),
-    rgba(255, 215, 100, 0.04)
-  );
-  box-shadow: inset 0 0 12px rgba(255, 215, 100, 0.2);
-}
-
-.leaderboard-table tbody tr:nth-child(1) td {
-  color: #ffd95a;
-  font-weight: bold;
-}
-
-/* Silver */
-
-.leaderboard-table tbody tr:nth-child(2) {
-  background: linear-gradient(
-    90deg,
-    rgba(200, 210, 230, 0.10),
-    rgba(200, 210, 230, 0.03)
-  );
-}
-
-.leaderboard-table tbody tr:nth-child(2) td {
-  color: #e4ebff;
-  font-weight: bold;
-}
-
-/* Bronze */
-
-.leaderboard-table tbody tr:nth-child(3) {
-  background: linear-gradient(
-    90deg,
-    rgba(210, 150, 95, 0.12),
-    rgba(210, 150, 95, 0.03)
-  );
-}
-
-.leaderboard-table tbody tr:nth-child(3) td {
-  color: #e2b48f;
-  font-weight: bold;
-}
-/* =========================================
-LEADERBOARD - TOP 3 PREMIUM STYLING
-========================================= */
-
-.leaderboard-table tbody tr:nth-child(1) {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 215, 100, 0.16),
-    rgba(255, 215, 100, 0.05)
-  );
-  box-shadow: inset 0 0 12px rgba(255, 215, 100, 0.20);
-  animation: championGlow 4s ease-in-out infinite;
-}
-
-.leaderboard-table tbody tr:nth-child(1) td {
-  color: #ffd95a;
-  font-weight: bold;
-}
-
-.leaderboard-table tbody tr:nth-child(2) {
-  background: linear-gradient(
-    90deg,
-    rgba(205, 215, 235, 0.12),
-    rgba(205, 215, 235, 0.03)
-  );
-}
-
-.leaderboard-table tbody tr:nth-child(2) td {
-  color: #e7eeff;
-  font-weight: bold;
-}
-
-.leaderboard-table tbody tr:nth-child(3) {
-  background: linear-gradient(
-    90deg,
-    rgba(210, 150, 95, 0.14),
-    rgba(210, 150, 95, 0.03)
-  );
-}
-
-.leaderboard-table tbody tr:nth-child(3) td {
-  color: #e5b48f;
-  font-weight: bold;
-}
-
-@keyframes championGlow {
-  0% {
-    box-shadow: inset 0 0 8px rgba(255, 215, 100, 0.14);
-  }
-  50% {
-    box-shadow: inset 0 0 18px rgba(255, 215, 100, 0.34);
-  }
-  100% {
-    box-shadow: inset 0 0 8px rgba(255, 215, 100, 0.14);
-  }
-}
-
-/* =========================================
-BINDER - NEXT LEVEL CARD EFFECTS
-========================================= */
-
-.card-grid {
-  align-items: start;
-}
-
-.binder-card {
-  position: relative;
-  overflow: hidden;
-  transform-origin: center center;
-}
-
-.binder-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(255,255,255,0.00) 35%,
-    rgba(255,255,255,0.18) 50%,
-    rgba(255,255,255,0.00) 65%,
-    transparent 100%
-  );
-  transform: translateX(-140%);
-  pointer-events: none;
-  opacity: 0;
-}
-
-.binder-card:hover {
-  transform: translateY(-6px) scale(1.03);
-  z-index: 2;
-}
-
-.binder-card:hover::before {
-  opacity: 1;
-  animation: cardShine 0.9s ease;
-}
-
-@keyframes cardShine {
-  0% {
-    transform: translateX(-140%);
-  }
-  100% {
-    transform: translateX(140%);
-  }
-}
-
-.binder-card img {
-  transition: transform 0.25s ease, filter 0.25s ease;
-}
-
-.binder-card:hover img {
-  transform: scale(1.02);
-  filter: brightness(1.05);
-}
-
-/* =========================================
-RARITY GLOW CLASSES
-These get added from script.js
-========================================= */
-
-.rarity-common {
-  box-shadow:
-    0 8px 22px rgba(0,0,0,0.30),
-    0 0 0 rgba(255,255,255,0);
-}
-
-.rarity-rare {
-  box-shadow:
-    0 8px 22px rgba(0,0,0,0.30),
-    0 0 12px rgba(90, 150, 255, 0.14);
-}
-
-.rarity-super {
-  box-shadow:
-    0 8px 22px rgba(0,0,0,0.30),
-    0 0 14px rgba(180, 110, 255, 0.18);
-}
-
-.rarity-ultra {
-  box-shadow:
-    0 8px 22px rgba(0,0,0,0.30),
-    0 0 16px rgba(255, 210, 90, 0.22);
-}
-
-.rarity-secret {
-  box-shadow:
-    0 8px 22px rgba(0,0,0,0.30),
-    0 0 18px rgba(255, 100, 190, 0.18),
-    0 0 26px rgba(120, 180, 255, 0.12);
-}
-
-.rarity-collector {
-  box-shadow:
-    0 8px 22px rgba(0,0,0,0.30),
-    0 0 18px rgba(255, 214, 110, 0.22),
-    0 0 28px rgba(255, 255, 255, 0.12);
-}
-
-.rarity-secret:hover,
-.rarity-collector:hover {
-  animation: rarePulse 1.8s ease-in-out infinite;
-}
-
-@keyframes rarePulse {
-  0% {
-    box-shadow:
-      0 8px 22px rgba(0,0,0,0.30),
-      0 0 16px rgba(255, 214, 110, 0.16);
-  }
-  50% {
-    box-shadow:
-      0 10px 26px rgba(0,0,0,0.34),
-      0 0 24px rgba(255, 214, 110, 0.30);
-  }
-  100% {
-    box-shadow:
-      0 8px 22px rgba(0,0,0,0.30),
-      0 0 16px rgba(255, 214, 110, 0.16);
-  }
-}
-
-/* =========================================
-RARITY BADGE LOOK
-========================================= */
-
-.binder-card-rarity {
-  display: inline-block;
-  margin-top: 4px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 0.92rem;
-  font-weight: bold;
-  background: rgba(255,255,255,0.06);
-}
-
-.binder-card-rarity.rarity-common {
-  color: #f0f0f0;
-}
-
-.binder-card-rarity.rarity-rare {
-  color: #7db2ff;
-}
-
-.binder-card-rarity.rarity-super {
-  color: #cc9dff;
-}
-
-.binder-card-rarity.rarity-ultra {
-  color: #ffd45c;
-}
-
-.binder-card-rarity.rarity-secret {
-  color: #ff9fd2;
-}
-
-.binder-card-rarity.rarity-collector {
-  color: #fff0b2;
 }
