@@ -12,15 +12,15 @@ window.addEventListener("load", async function () {
     const data = await response.json();
     console.log("Loaded stats JSON:", data);
 
-    if (!data.users || !Array.isArray(data.users)) {
-      throw new Error("No users array found in ygo_stats.json");
+    if (!data.leaderboard || !Array.isArray(data.leaderboard)) {
+      throw new Error("No leaderboard array found in ygo_stats.json");
     }
 
-    const rankings = data.users
+    const rankings = data.leaderboard
       .slice()
       .sort((a, b) => {
-        if ((b.packs || 0) !== (a.packs || 0)) {
-          return (b.packs || 0) - (a.packs || 0);
+        if ((b.packsOpened || 0) !== (a.packsOpened || 0)) {
+          return (b.packsOpened || 0) - (a.packsOpened || 0);
         }
         return (b.totalCards || 0) - (a.totalCards || 0);
       });
@@ -41,7 +41,7 @@ window.addEventListener("load", async function () {
       <tr>
         <td>#${index + 1}</td>
         <td>${escapeHtml(user.username || "Unknown User")}</td>
-        <td>${user.packs || 0}</td>
+        <td>${user.packsOpened || 0}</td>
         <td>${user.totalCards || 0}</td>
       </tr>
     `).join("");
