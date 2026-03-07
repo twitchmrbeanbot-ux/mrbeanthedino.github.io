@@ -66,9 +66,7 @@ fetch("ygo_collection.json")
       html += `
         <div class="leaderboard-grid leaderboard-row">
           <div>#${index + 1}</div>
-          <div>
-            <a class="leaderboard-link" href="./?user=${encodeURIComponent(user.username)}">${user.username}</a>
-          </div>
+          <div><a class="leaderboard-link" href="./?user=${encodeURIComponent(user.username)}">${user.username}</a></div>
           <div>${user.totalCards}</div>
           <div>${user.bestRarity}</div>
           <div>${user.bestCard}</div>
