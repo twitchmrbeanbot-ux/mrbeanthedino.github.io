@@ -1,16 +1,23 @@
-console.log("NEW script.js loaded v11");
+console.log("NEW script.js loaded v12");
 
 let allCards = [];
 let filteredCards = [];
 let activeViewer = "";
 let activeFilter = "All";
-let lastViewerSnapshot = "";
 
 window.addEventListener("load", async function () {
   console.log("Binder page booted");
+
   wireUi();
   await tryAutoLoadFromQuery();
-  setInterval(checkForViewerChanges, 10000);
+
+  // Auto refresh every 15 seconds if a viewer is loaded
+  setInterval(function () {
+    if (activeViewer) {
+      console.log("Auto reloading binder for viewer:", activeViewer);
+      window.location.reload();
+    }
+  }, 15000);
 });
 
 function wireUi() {
@@ -42,6 +49,7 @@ function wireUi() {
       });
 
       btn.classList.add("active-filter");
+
       applyFilterAndRender();
     });
   }
@@ -56,7 +64,7 @@ async function tryAutoLoadFromQuery() {
   const input = document.getElementById("viewerSearch");
   if (input) input.value = viewer;
 
-  await loadViewer(viewer, true);
+  await loadViewer(viewer, false);
 }
 
 function loadViewerFromInput() {
@@ -64,79 +72,57 @@ function loadViewerFromInput() {
   const viewer = input ? input.value.trim() : "";
 
   if (!viewer) return;
+
   loadViewer(viewer, true);
 }
 
-async function checkForViewerChanges() {
-  if (!activeViewer) return;
-
-  try {
-    const response = await fetch("./ygo_collection.json?t=" + Date.now(), {
-      cache: "no-store"
-    });
-
-    if (!response.ok) return;
-
-    const data = await response.json();
-    const cards = Array.isArray(data.cards) ? data.cards : [];
-
-    const viewerCards = cards.filter(card =>
-      String(card.username || "").toLowerCase() === activeViewer.toLowerCase()
-    );
-
-    const snapshot = JSON.stringify(viewerCards);
-
-    if (lastViewerSnapshot && snapshot !== lastViewerSnapshot) {
-      console.log("Viewer collection changed, reloading page");
-      window.location.reload();
-      return;
-    }
-  } catch (error) {
-    console.error("Auto-refresh check failed:", error);
-  }
-}
-
 async function loadViewer(viewerName, updateUrlFlag) {
+
   const loadedMessage = document.getElementById("loadedMessage");
 
   try {
+
     const response = await fetch("./ygo_collection.json?t=" + Date.now(), {
       cache: "no-store"
     });
 
-    if (!response.ok) throw new Error("Failed to load ygo_collection.json");
+    if (!response.ok) throw new Error("Failed to load collection");
 
     const data = await response.json();
     const cards = Array.isArray(data.cards) ? data.cards : [];
 
     activeViewer = viewerName;
+
     allCards = cards.filter(card =>
       String(card.username || "").toLowerCase() === viewerName.toLowerCase()
     );
 
-    lastViewerSnapshot = JSON.stringify(allCards);
-
     if (loadedMessage) {
       const now = new Date().toLocaleTimeString();
+
       loadedMessage.textContent = allCards.length
         ? `Loaded binder for ${viewerName} • Updated ${now}`
-        : `No cards found for ${viewerName} • Checked ${now}`;
+        : `No cards found for ${viewerName}`;
     }
 
     updateSummary(viewerName, allCards);
+
     applyFilterAndRender();
 
-    if (updateUrlFlag) {
-      updateUrl(viewerName);
-    }
+    if (updateUrlFlag) updateUrl(viewerName);
 
   } catch (error) {
+
     console.error("Binder load error:", error);
-    if (loadedMessage) loadedMessage.textContent = "Failed to load binder data.";
+
+    if (loadedMessage) {
+      loadedMessage.textContent = "Failed to load binder data.";
+    }
   }
 }
 
 function updateSummary(viewerName, cards) {
+
   const cardsOwned = document.getElementById("cardsOwned");
   const bestCard = document.getElementById("bestCard");
   const bestRarity = document.getElementById("bestRarity");
@@ -155,19 +141,24 @@ function updateSummary(viewerName, cards) {
   let best = null;
 
   cards.forEach(card => {
+
     const rarity = normalizeRarity(card.rarity);
-    if (rarityCounts[rarity] !== undefined) rarityCounts[rarity]++;
+
+    if (rarityCounts[rarity] !== undefined) {
+      rarityCounts[rarity]++;
+    }
 
     if (!best || rarityRank(rarity) > rarityRank(normalizeRarity(best.rarity))) {
       best = card;
     }
+
   });
 
   if (cardsOwned) cardsOwned.textContent = cards.length;
-  if (bestCard) bestCard.textContent = best ? (best.cardName || "-") : "-";
+  if (bestCard) bestCard.textContent = best ? best.cardName : "-";
   if (bestRarity) bestRarity.textContent = best ? normalizeRarity(best.rarity) : "-";
-  if (viewerNameDisplay) viewerNameDisplay.textContent = viewerName || "-";
-  if (binderTitle) binderTitle.textContent = viewerName ? `${viewerName}'s Binder` : "Viewer Binder";
+  if (viewerNameDisplay) viewerNameDisplay.textContent = viewerName;
+  if (binderTitle) binderTitle.textContent = `${viewerName}'s Binder`;
 
   setText("rarityCommon", rarityCounts.Common);
   setText("rarityRare", rarityCounts.Rare);
@@ -178,14 +169,20 @@ function updateSummary(viewerName, cards) {
 }
 
 function applyFilterAndRender() {
-  filteredCards = activeFilter === "All"
-    ? allCards.slice()
-    : allCards.filter(card => normalizeRarity(card.rarity) === activeFilter);
+
+  if (activeFilter === "All") {
+    filteredCards = allCards.slice();
+  } else {
+    filteredCards = allCards.filter(card =>
+      normalizeRarity(card.rarity) === activeFilter
+    );
+  }
 
   renderCards(filteredCards);
 }
 
 function renderCards(cards) {
+
   const grid = document.getElementById("card-grid");
   const showingCount = document.getElementById("showingCount");
 
@@ -196,11 +193,12 @@ function renderCards(cards) {
   if (!grid) return;
 
   if (!cards.length) {
-    grid.innerHTML = `<div class="empty-state">No cards found for this filter.</div>`;
+    grid.innerHTML = `<div class="empty-state">No cards found.</div>`;
     return;
   }
 
   grid.innerHTML = cards.map(card => {
+
     const rarity = normalizeRarity(card.rarity);
     const rarityClass = `rarity-${rarity.toLowerCase()}`;
     const imageUrl = `https://images.ygoprodeck.com/images/cards/${card.cardId}.jpg`;
@@ -214,48 +212,58 @@ function renderCards(cards) {
           onerror="this.onerror=null;this.src='https://images.ygoprodeck.com/images/cards/back.jpg';"
         />
         <div class="binder-card-name">${escapeHtml(card.cardName || "Unknown Card")}</div>
-        <div class="binder-card-rarity ${rarityClass}">${escapeHtml(rarity)}</div>
+        <div class="binder-card-rarity ${rarityClass}">${rarity}</div>
       </div>
     `;
   }).join("");
 }
 
 function normalizeRarity(rarity) {
-  const value = String(rarity || "").trim().toLowerCase();
-  if (value === "common") return "Common";
-  if (value === "rare") return "Rare";
-  if (value === "super") return "Super";
-  if (value === "ultra") return "Ultra";
-  if (value === "secret") return "Secret";
-  if (value === "collector") return "Collector";
+
+  const r = String(rarity || "").toLowerCase();
+
+  if (r === "rare") return "Rare";
+  if (r === "super") return "Super";
+  if (r === "ultra") return "Ultra";
+  if (r === "secret") return "Secret";
+  if (r === "collector") return "Collector";
+
   return "Common";
 }
 
 function rarityRank(rarity) {
+
   if (rarity === "Collector") return 6;
   if (rarity === "Secret") return 5;
   if (rarity === "Ultra") return 4;
   if (rarity === "Super") return 3;
   if (rarity === "Rare") return 2;
+
   return 1;
 }
 
 function updateUrl(viewerName) {
+
   const url = new URL(window.location.href);
+
   url.searchParams.set("viewer", viewerName);
+
   window.history.replaceState({}, "", url.toString());
 }
 
 function setText(id, value) {
+
   const el = document.getElementById(id);
+
   if (el) el.textContent = value;
 }
 
 function escapeHtml(text) {
+
   return String(text)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
