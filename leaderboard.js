@@ -1,4 +1,11 @@
+let lastLeaderboardSnapshot = "";
+
 window.addEventListener("load", async function () {
+  await loadLeaderboard();
+  setInterval(loadLeaderboard, 15000);
+});
+
+async function loadLeaderboard() {
   const leaderboardBody = document.getElementById("leaderboard-body");
   const leaderboardStatus = document.getElementById("leaderboard-status");
 
@@ -10,6 +17,13 @@ window.addEventListener("load", async function () {
     }
 
     const data = await response.json();
+    const snapshot = JSON.stringify(data);
+
+    if (snapshot === lastLeaderboardSnapshot) {
+      return;
+    }
+
+    lastLeaderboardSnapshot = snapshot;
 
     if (!data.leaderboard || !Array.isArray(data.leaderboard)) {
       throw new Error("No leaderboard array found in ygo_stats.json");
@@ -51,14 +65,18 @@ window.addEventListener("load", async function () {
 
   } catch (error) {
     console.error("Leaderboard load error:", error);
-    leaderboardStatus.textContent = "Failed to load leaderboard.";
-    leaderboardBody.innerHTML = `
-      <tr>
-        <td colspan="4">Error loading leaderboard data.</td>
-      </tr>
-    `;
+    if (leaderboardStatus) {
+      leaderboardStatus.textContent = "Failed to load leaderboard.";
+    }
+    if (leaderboardBody) {
+      leaderboardBody.innerHTML = `
+        <tr>
+          <td colspan="4">Error loading leaderboard data.</td>
+        </tr>
+      `;
+    }
   }
-});
+}
 
 function rankBadge(rank) {
   if (rank === 1) return "🥇 #1";
