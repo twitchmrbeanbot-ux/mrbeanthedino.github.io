@@ -448,3 +448,48 @@ button:hover {
   color: var(--gold);
   border-bottom-color: var(--gold);
 }
+/* ===== Leaderboard Top 3 Styling ===== */
+
+.leaderboard-table tbody tr:nth-child(1) {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 215, 100, 0.12),
+    rgba(255, 215, 100, 0.04)
+  );
+  box-shadow: inset 0 0 12px rgba(255, 215, 100, 0.2);
+}
+
+.leaderboard-table tbody tr:nth-child(1) td {
+  color: #ffd95a;
+  font-weight: bold;
+}
+
+/* Silver */
+
+.leaderboard-table tbody tr:nth-child(2) {
+  background: linear-gradient(
+    90deg,
+    rgba(200, 210, 230, 0.10),
+    rgba(200, 210, 230, 0.03)
+  );
+}
+
+.leaderboard-table tbody tr:nth-child(2) td {
+  color: #e4ebff;
+  font-weight: bold;
+}
+
+/* Bronze */
+
+.leaderboard-table tbody tr:nth-child(3) {
+  background: linear-gradient(
+    90deg,
+    rgba(210, 150, 95, 0.12),
+    rgba(210, 150, 95, 0.03)
+  );
+}
+
+.leaderboard-table tbody tr:nth-child(3) td {
+  color: #e2b48f;
+  font-weight: bold;
+}
