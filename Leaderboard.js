@@ -3,7 +3,7 @@ async function loadLeaderboard() {
   const leaderboardStatus = document.getElementById("leaderboard-status");
 
   try {
-    const response = await fetch("ygo_collection.json?t=" + Date.now());
+   const response = await fetch("./ygo_collection.json?t=" + Date.now());
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
     const data = await response.json();
