@@ -1,83 +1,33 @@
-const leaderboardTable = document.getElementById("leaderboardTable");
-const totalUsersText = document.getElementById("totalUsersText");
-
-const rarityRank = {
-  Common: 1,
-  Rare: 2,
-  Super: 3,
-  Ultra: 4,
-  Secret: 5,
-  Collector: 6
-};
-
-fetch("ygo_collection.json")
-  .then(response => response.json())
-  .then(data => {
-    const cards = data.cards || [];
-    const users = {};
-
-    cards.forEach(card => {
-      const username = String(card.username || "").trim();
-      if (!username) return;
-
-      if (!users[username]) {
-        users[username] = {
-          username,
-          totalCards: 0,
-          bestCard: "None",
-          bestRarity: "Common",
-          bestRank: 0
-        };
-      }
-
-      users[username].totalCards++;
-
-      const rank = rarityRank[card.rarity] || 0;
-      if (rank > users[username].bestRank) {
-        users[username].bestRank = rank;
-        users[username].bestRarity = card.rarity || "Common";
-        users[username].bestCard = card.cardName || "Unknown Card";
-      }
-    });
-
-    const rows = Object.values(users).sort((a, b) => {
-      if (b.totalCards !== a.totalCards) return b.totalCards - a.totalCards;
-      return b.bestRank - a.bestRank;
-    });
-
-    totalUsersText.textContent = rows.length + " users ranked";
-
-    if (rows.length === 0) {
-      leaderboardTable.innerHTML = '<div class="empty-state">No collection data found.</div>';
-      return;
-    }
-
-    let html = `
-      <div class="leaderboard-grid leaderboard-head">
-        <div>Rank</div>
-        <div>User</div>
-        <div>Total Cards</div>
-        <div>Best Rarity</div>
-        <div>Best Card</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YGO Leaderboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-left">
+        <p class="eyebrow">Yu-Gi-Oh Viewer Leaderboard</p>
+        <h1>Top Collectors</h1>
+        <p class="subtext">
+          See who owns the most cards and who has the strongest pulls.
+        </p>
       </div>
-    `;
+    </header>
 
-    rows.forEach((user, index) => {
-      html += `
-        <div class="leaderboard-grid leaderboard-row">
-          <div>#${index + 1}</div>
-          <div><a class="leaderboard-link" href="./?user=${encodeURIComponent(user.username)}">${user.username}</a></div>
-          <div>${user.totalCards}</div>
-          <div>${user.bestRarity}</div>
-          <div>${user.bestCard}</div>
-        </div>
-      `;
-    });
+    <section class="panel">
+      <div class="binder-header">
+        <h2>Leaderboard</h2>
+        <span id="totalUsersText">Loading...</span>
+      </div>
 
-    leaderboardTable.innerHTML = html;
-  })
-  .catch(err => {
-    console.error(err);
-    totalUsersText.textContent = "Error";
-    leaderboardTable.innerHTML = '<div class="empty-state">Could not load leaderboard.</div>';
-  });
+      <div id="leaderboardTable"></div>
+    </section>
+  </div>
+
+  <script src="leaderboard.js"></script>
+</body>
+</html>
