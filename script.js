@@ -1,244 +1,222 @@
 let allCards = [];
-let currentUserCards = [];
-let currentFilter = "All";
+let filteredCards = [];
+let activeViewer = "";
+let activeFilter = "All";
 
-const rarityOrder = ["Common","Rare","Super","Ultra","Secret","Collector"];
-const rarityRank = {
-  Common:1,
-  Rare:2,
-  Super:3,
-  Ultra:4,
-  Secret:5,
-  Collector:6
-};
+window.addEventListener("load", async function () {
+  wireUi();
+  await tryAutoLoadFromQuery();
+});
 
-const pageTitle = document.getElementById("pageTitle");
-const totalCards = document.getElementById("totalCards");
-const bestCard = document.getElementById("bestCard");
-const bestRarity = document.getElementById("bestRarity");
-const statusText = document.getElementById("statusText");
-const rarityBreakdown = document.getElementById("rarityBreakdown");
-const cardGrid = document.getElementById("cardGrid");
-const showingText = document.getElementById("showingText");
-const usernameInput = document.getElementById("usernameInput");
-const loadBtn = document.getElementById("loadBtn");
-const filterButtons = document.querySelectorAll(".filter-btn");
+function wireUi() {
+  const loadBtn = document.getElementById("loadBinderBtn");
+  const searchInput = document.getElementById("viewerSearch");
+  const filterWrap = document.getElementById("filter-buttons");
 
-if (loadBtn) {
-  loadBtn.addEventListener("click", loadUserBinder);
+  if (loadBtn) {
+    loadBtn.addEventListener("click", loadViewerFromInput);
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        loadViewerFromInput();
+      }
+    });
+  }
+
+  if (filterWrap) {
+    filterWrap.addEventListener("click", function (e) {
+      const btn = e.target.closest("button[data-rarity]");
+      if (!btn) return;
+
+      activeFilter = btn.getAttribute("data-rarity") || "All";
+
+      document.querySelectorAll("#filter-buttons button").forEach(b => {
+        b.classList.remove("active-filter");
+      });
+
+      btn.classList.add("active-filter");
+      applyFilterAndRender();
+    });
+  }
 }
 
-if (usernameInput) {
-  usernameInput.addEventListener("keydown", function(e){
-    if (e.key === "Enter") {
-      loadUserBinder();
+async function tryAutoLoadFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const viewer = (params.get("viewer") || "").trim();
+
+  if (!viewer) return;
+
+  const input = document.getElementById("viewerSearch");
+  if (input) input.value = viewer;
+
+  await loadViewer(viewer);
+}
+
+function loadViewerFromInput() {
+  const input = document.getElementById("viewerSearch");
+  const viewer = input ? input.value.trim() : "";
+
+  if (!viewer) return;
+  loadViewer(viewer);
+}
+
+async function loadViewer(viewerName) {
+  const loadedMessage = document.getElementById("loadedMessage");
+
+  try {
+    const response = await fetch("./ygo_collection.json?t=" + Date.now());
+    if (!response.ok) throw new Error("Failed to load ygo_collection.json");
+
+    const data = await response.json();
+    const cards = Array.isArray(data.cards) ? data.cards : [];
+
+    activeViewer = viewerName;
+    allCards = cards.filter(card =>
+      String(card.username || "").toLowerCase() === viewerName.toLowerCase()
+    );
+
+    if (loadedMessage) {
+      loadedMessage.textContent = allCards.length
+        ? `Loaded binder for ${viewerName}`
+        : `No cards found for ${viewerName}`;
     }
-  });
+
+    updateSummary(viewerName, allCards);
+    activeFilter = "All";
+
+    document.querySelectorAll("#filter-buttons button").forEach((b, index) => {
+      b.classList.toggle("active-filter", index === 0);
+    });
+
+    applyFilterAndRender();
+    updateUrl(viewerName);
+
+  } catch (error) {
+    console.error("Binder load error:", error);
+    if (loadedMessage) loadedMessage.textContent = "Failed to load binder data.";
+  }
 }
 
-filterButtons.forEach(btn=>{
-  btn.addEventListener("click", function(){
-    filterButtons.forEach(b=>b.classList.remove("active"));
-    this.classList.add("active");
-    currentFilter = this.dataset.rarity;
-    renderCards();
-  });
-});
+function updateSummary(viewerName, cards) {
+  const cardsOwned = document.getElementById("cardsOwned");
+  const bestCard = document.getElementById("bestCard");
+  const bestRarity = document.getElementById("bestRarity");
+  const viewerNameDisplay = document.getElementById("viewerNameDisplay");
+  const binderTitle = document.getElementById("binder-title");
 
-fetch("ygo_collection.json")
-.then(response=>response.json())
-.then(data=>{
-
-  allCards = data.cards || [];
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const userFromUrl = urlParams.get("user");
-
-  if(userFromUrl && usernameInput){
-    usernameInput.value = userFromUrl;
-    loadUserBinder();
-  }
-  else{
-    statusText.textContent = "Collection loaded. Enter a viewer name.";
-  }
-
-})
-.catch(err=>{
-  console.error(err);
-  statusText.textContent = "Could not load collection.";
-});
-
-function loadUserBinder(){
-
-  const username = usernameInput.value.trim();
-
-  if(!username){
-    statusText.textContent = "Enter a viewer name.";
-    return;
-  }
-
-  const normalized = username.toLowerCase();
-
-  currentUserCards = allCards.filter(card=>{
-    const cardUser = String(card.username || "").trim().toLowerCase();
-    return cardUser === normalized;
-  });
-
-  if(currentUserCards.length === 0){
-
-    pageTitle.textContent = username + "'s Binder";
-    totalCards.textContent = "0";
-    bestCard.textContent = "None";
-    bestRarity.textContent = "-";
-
-    rarityBreakdown.innerHTML = "";
-    cardGrid.innerHTML = '<div class="empty-state">No cards found.</div>';
-    showingText.textContent = "Showing 0 cards";
-    statusText.textContent = "No collection found.";
-
-    return;
-  }
-
-  currentUserCards.sort((a,b)=>{
-
-    const rarityDiff = (rarityRank[b.rarity]||0) - (rarityRank[a.rarity]||0);
-
-    if(rarityDiff !== 0) return rarityDiff;
-
-    return String(a.cardName||"").localeCompare(String(b.cardName||""));
-
-  });
-
-  const best = currentUserCards[0];
-
-  pageTitle.textContent = username + "'s Binder";
-  totalCards.textContent = currentUserCards.length;
-  bestCard.textContent = best.cardName || "Unknown";
-  bestRarity.textContent = best.rarity || "-";
-
-  statusText.textContent = "Loaded binder for " + username;
-
-  renderRarityBreakdown();
-  renderCards();
-
-  const newUrl = window.location.pathname + "?user=" + encodeURIComponent(username);
-  window.history.replaceState({}, "", newUrl);
-}
-
-function renderRarityBreakdown(){
-
-  const counts = {
-    Common:0,
-    Rare:0,
-    Super:0,
-    Ultra:0,
-    Secret:0,
-    Collector:0
+  const rarityCounts = {
+    Common: 0,
+    Rare: 0,
+    Super: 0,
+    Ultra: 0,
+    Secret: 0,
+    Collector: 0
   };
 
-  currentUserCards.forEach(card=>{
-    if(counts.hasOwnProperty(card.rarity)){
-      counts[card.rarity]++;
+  let best = null;
+
+  cards.forEach(card => {
+    const rarity = normalizeRarity(card.rarity);
+    if (rarityCounts[rarity] !== undefined) {
+      rarityCounts[rarity]++;
+    }
+
+    if (!best || rarityRank(rarity) > rarityRank(normalizeRarity(best.rarity))) {
+      best = card;
     }
   });
 
-  rarityBreakdown.innerHTML = "";
+  if (cardsOwned) cardsOwned.textContent = cards.length;
+  if (bestCard) bestCard.textContent = best ? (best.cardName || "-") : "-";
+  if (bestRarity) bestRarity.textContent = best ? normalizeRarity(best.rarity) : "-";
+  if (viewerNameDisplay) viewerNameDisplay.textContent = viewerName || "-";
+  if (binderTitle) binderTitle.textContent = viewerName ? `${viewerName}'s Binder` : "Viewer Binder";
 
-  rarityOrder.forEach(rarity=>{
-
-    const count = counts[rarity];
-
-    const percent = currentUserCards.length>0
-      ? Math.max(4,(count/currentUserCards.length)*100)
-      : 0;
-
-    const row = document.createElement("div");
-    row.className = "rarity-row";
-
-    row.innerHTML = `
-      <div class="rarity-top">
-        <span>${rarity}</span>
-        <span>${count}</span>
-      </div>
-      <div class="rarity-bar-bg">
-        <div class="rarity-bar-fill" style="width:${percent}%"></div>
-      </div>
-    `;
-
-    rarityBreakdown.appendChild(row);
-
-  });
+  setText("rarityCommon", rarityCounts.Common);
+  setText("rarityRare", rarityCounts.Rare);
+  setText("raritySuper", rarityCounts.Super);
+  setText("rarityUltra", rarityCounts.Ultra);
+  setText("raritySecret", rarityCounts.Secret);
+  setText("rarityCollector", rarityCounts.Collector);
 }
 
-function renderCards(){
-
-  let filtered = currentUserCards;
-
-  if(currentFilter !== "All"){
-    filtered = currentUserCards.filter(card=>card.rarity === currentFilter);
+function applyFilterAndRender() {
+  if (activeFilter === "All") {
+    filteredCards = allCards.slice();
+  } else {
+    filteredCards = allCards.filter(card =>
+      normalizeRarity(card.rarity) === activeFilter
+    );
   }
 
-  showingText.textContent = "Showing " + filtered.length + " cards";
+  renderCards(filteredCards);
+}
 
-  if(filtered.length === 0){
-    cardGrid.innerHTML = '<div class="empty-state">No cards match filter.</div>';
+function renderCards(cards) {
+  const grid = document.getElementById("card-grid");
+  const showingCount = document.getElementById("showingCount");
+
+  if (showingCount) {
+    showingCount.textContent = `Showing ${cards.length} card${cards.length === 1 ? "" : "s"}`;
+  }
+
+  if (!grid) return;
+
+  if (!cards.length) {
+    grid.innerHTML = `<div class="empty-state">No cards found for this filter.</div>`;
     return;
   }
 
-  cardGrid.innerHTML = "";
-
-  filtered.forEach(card=>{
-
-    const tile = document.createElement("div");
-    tile.className = "card-tile " + getGlowClass(card.rarity);
-
-    const img = document.createElement("img");
-    img.className = "card-image";
-
-    /* IMAGE SOURCE NOW COMES FROM YGOPRODECK */
-    img.src = "https://images.ygoprodeck.com/images/cards/" + card.cardId + ".jpg";
-
-    img.onerror = function(){
-      this.src = "https://placehold.co/300x420/111827/e5e7eb?text=No+Image";
-    };
-
-    const name = document.createElement("div");
-    name.className = "card-name";
-    name.textContent = card.cardName || "Unknown Card";
-
-    const rarity = document.createElement("div");
-    rarity.className = "card-rarity";
-    rarity.textContent = card.rarity || "";
-
-    tile.appendChild(img);
-    tile.appendChild(name);
-    tile.appendChild(rarity);
-
-    cardGrid.appendChild(tile);
-
-  });
+  grid.innerHTML = cards.map(card => `
+    <div class="binder-card">
+      <img src="./images/full/${card.cardId}.jpg" alt="${escapeHtml(card.cardName || "Card")}"
+           onerror="this.onerror=null;this.src='./images/placeholder.jpg';" />
+      <div class="binder-card-name">${escapeHtml(card.cardName || "Unknown Card")}</div>
+      <div class="binder-card-rarity">${escapeHtml(normalizeRarity(card.rarity))}</div>
+    </div>
+  `).join("");
 }
 
-function getGlowClass(rarity){
+function normalizeRarity(rarity) {
+  const value = String(rarity || "").trim().toLowerCase();
 
-  switch(rarity){
+  if (value === "common") return "Common";
+  if (value === "rare") return "Rare";
+  if (value === "super") return "Super";
+  if (value === "ultra") return "Ultra";
+  if (value === "secret") return "Secret";
+  if (value === "collector") return "Collector";
 
-    case "Rare":
-      return "glow-rare";
+  return "Common";
+}
 
-    case "Super":
-      return "glow-super";
+function rarityRank(rarity) {
+  if (rarity === "Collector") return 6;
+  if (rarity === "Secret") return 5;
+  if (rarity === "Ultra") return 4;
+  if (rarity === "Super") return 3;
+  if (rarity === "Rare") return 2;
+  return 1;
+}
 
-    case "Ultra":
-      return "glow-ultra";
+function updateUrl(viewerName) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("viewer", viewerName);
+  window.history.replaceState({}, "", url.toString());
+}
 
-    case "Secret":
-      return "glow-secret";
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
 
-    case "Collector":
-      return "glow-collector";
-
-    default:
-      return "glow-common";
-  }
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
