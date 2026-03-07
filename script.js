@@ -164,7 +164,7 @@ function renderCards() {
 
     const img = document.createElement("img");
     img.className = "card-image";
-    img.src = "images/" + card.cardId + ".jpg";
+    img.src = "./images/" + card.cardId + ".jpg";
     img.alt = card.cardName || "Card";
     img.onerror = function () {
       this.src = "https://placehold.co/300x420/111827/e5e7eb?text=No+Image";
@@ -196,3 +196,4 @@ function getGlowClass(rarity) {
     default: return "glow-common";
   }
 }
+
