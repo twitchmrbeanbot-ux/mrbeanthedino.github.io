@@ -12,49 +12,27 @@ const rarityRank = {
 
 async function loadLeaderboard() {
   try {
-    const response = await fetch("ygo_collection.json");
+    const response = await fetch("ygo_stats.json");
 
     if (!response.ok) {
-      throw new Error("Failed to load ygo_collection.json");
+      throw new Error("Failed to load ygo_stats.json");
     }
 
     const data = await response.json();
-    const cards = data.cards || [];
-    const users = {};
+    const users = data.users || [];
 
-    cards.forEach(card => {
-      const username = String(card.username || "").trim();
-      if (!username) return;
+    const rows = users.sort((a, b) => {
+      if ((b.packs || 0) !== (a.packs || 0)) return (b.packs || 0) - (a.packs || 0);
 
-      if (!users[username]) {
-        users[username] = {
-          username: username,
-          totalCards: 0,
-          bestCard: "None",
-          bestRarity: "-",
-          bestRank: 0
-        };
-      }
-
-      users[username].totalCards++;
-
-      const rank = rarityRank[card.rarity] || 0;
-      if (rank > users[username].bestRank) {
-        users[username].bestRank = rank;
-        users[username].bestRarity = card.rarity || "-";
-        users[username].bestCard = card.cardName || "Unknown Card";
-      }
-    });
-
-    const rows = Object.values(users).sort((a, b) => {
-      if (b.totalCards !== a.totalCards) return b.totalCards - a.totalCards;
-      return b.bestRank - a.bestRank;
+      const aRank = rarityRank[a.bestRarity] || 0;
+      const bRank = rarityRank[b.bestRarity] || 0;
+      return bRank - aRank;
     });
 
     totalUsersText.textContent = rows.length + " users ranked";
 
     if (rows.length === 0) {
-      leaderboardTable.innerHTML = '<div class="empty-state">No collection data found.</div>';
+      leaderboardTable.innerHTML = '<div class="empty-state">No stats data found.</div>';
       return;
     }
 
@@ -62,9 +40,9 @@ async function loadLeaderboard() {
       <div class="leaderboard-grid leaderboard-head">
         <div>Rank</div>
         <div>User</div>
-        <div>Total Cards</div>
-        <div>Best Rarity</div>
-        <div>Best Card</div>
+        <div>Packs</div>
+        <div>Cards</div>
+        <div>Best Pull</div>
       </div>
     `;
 
@@ -73,9 +51,9 @@ async function loadLeaderboard() {
         <div class="leaderboard-grid leaderboard-row">
           <div>#${index + 1}</div>
           <div><a class="leaderboard-link" href="index.html?user=${encodeURIComponent(user.username)}">${user.username}</a></div>
-          <div>${user.totalCards}</div>
-          <div>${user.bestRarity}</div>
-          <div>${user.bestCard}</div>
+          <div>${user.packs || 0}</div>
+          <div>${user.totalCards || 0}</div>
+          <div>${user.bestRarity || "-"}${user.bestCard ? " — " + user.bestCard : ""}</div>
         </div>
       `;
     });
