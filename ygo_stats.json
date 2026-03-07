@@ -1,6 +1,3 @@
-﻿{
-  "leaderboard": [
-    {"username":"mrbeanthedino","packsOpened":36,"totalCards":69,"bestCard":"Amorphage Sloth","bestRarity":"Secret"},
-    {"username":"bisiquit","packsOpened":1,"totalCards":1,"bestCard":"Formud Skipper","bestRarity":"Ultra"}
-  ]
+{
+  "leaderboard": []
 }

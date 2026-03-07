@@ -1,12 +1,3 @@
-﻿{
-  "cards": [
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"10406322","cardName":"Alsei, the Sylvan High Protector","rarity":"Ultra","dateAdded":"2026-03-06"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"92345028","cardName":"Fury of Fire","rarity":"Super","dateAdded":"2026-03-06"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"73026394","cardName":"Fusion Guard","rarity":"Super","dateAdded":"2026-03-06"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"26434972","cardName":"Fiendsmith Kyrie","rarity":"Super","dateAdded":"2026-03-06"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"14799437","cardName":"Infernoid Onuncu","rarity":"Secret","dateAdded":"2026-03-06"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"18210764","cardName":"Pendulumucho","rarity":"Super","dateAdded":"2026-03-06"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"24081957","cardName":"Sinful Spoils of Subversion - Snake-Eye","rarity":"Secret","dateAdded":"2026-03-06"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"41546","cardName":"D/D Savant Thomas","rarity":"Ultra","dateAdded":"2026-03-06"}
-  ]
+{
+  "cards": []
 }
