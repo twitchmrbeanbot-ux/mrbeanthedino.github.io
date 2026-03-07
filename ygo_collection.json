@@ -1,10 +1,3 @@
-﻿{
-  "cards": [
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"9102835","cardName":"Salamandra Fusion","rarity":"Rare","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"89552119","cardName":"Cucumber Horse","rarity":"Common","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"56574543","cardName":"Bujingi Sinyou","rarity":"Ultra","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"73837870","cardName":"Sunny Pixie","rarity":"Common","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"2390019","cardName":"Ojamassimilation","rarity":"Rare","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"54326448","cardName":"Flamvell Archer","rarity":"Rare","dateAdded":"2026-03-07"}
-  ]
+{
+  "cards": []
 }
