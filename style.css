@@ -1,198 +1,298 @@
-let allCards = [];
-let currentUserCards = [];
-let currentFilter = "All";
-
-const rarityOrder = ["Common", "Rare", "Super", "Ultra", "Secret", "Collector"];
-const rarityRank = {
-  Common: 1,
-  Rare: 2,
-  Super: 3,
-  Ultra: 4,
-  Secret: 5,
-  Collector: 6
-};
-
-const pageTitle = document.getElementById("pageTitle");
-const totalCards = document.getElementById("totalCards");
-const bestCard = document.getElementById("bestCard");
-const bestRarity = document.getElementById("bestRarity");
-const statusText = document.getElementById("statusText");
-const rarityBreakdown = document.getElementById("rarityBreakdown");
-const cardGrid = document.getElementById("cardGrid");
-const showingText = document.getElementById("showingText");
-const usernameInput = document.getElementById("usernameInput");
-const loadBtn = document.getElementById("loadBtn");
-const filterButtons = document.querySelectorAll(".filter-btn");
-
-loadBtn.addEventListener("click", loadUserBinder);
-usernameInput.addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    loadUserBinder();
-  }
-});
-
-filterButtons.forEach(btn => {
-  btn.addEventListener("click", function () {
-    filterButtons.forEach(b => b.classList.remove("active"));
-    this.classList.add("active");
-    currentFilter = this.dataset.rarity;
-    renderCards();
-  });
-});
-
-fetch("ygo_collection.json")
-  .then(response => response.json())
-  .then(data => {
-    allCards = data.cards || [];
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const userFromUrl = urlParams.get("user");
-
-    if (userFromUrl) {
-      usernameInput.value = userFromUrl;
-      loadUserBinder();
-    } else {
-      statusText.textContent = "Collection data loaded. Enter a viewer name.";
-    }
-  })
-  .catch(() => {
-    statusText.textContent = "Could not load ygo_collection.json";
-  });
-
-function loadUserBinder() {
-  const username = usernameInput.value.trim();
-  if (!username) {
-    statusText.textContent = "Please enter a viewer name.";
-    return;
-  }
-
-  currentUserCards = allCards.filter(card =>
-    (card.username || "").toLowerCase() === username.toLowerCase()
-  );
-
-  if (currentUserCards.length === 0) {
-    pageTitle.textContent = username + "'s Binder";
-    totalCards.textContent = "0";
-    bestCard.textContent = "None";
-    bestRarity.textContent = "-";
-    rarityBreakdown.innerHTML = "";
-    cardGrid.innerHTML = '<div class="empty-state">No cards found for this viewer.</div>';
-    showingText.textContent = "Showing 0 cards";
-    statusText.textContent = "No collection found for " + username;
-    return;
-  }
-
-  currentUserCards.sort((a, b) => {
-    const rarityDiff = (rarityRank[b.rarity] || 0) - (rarityRank[a.rarity] || 0);
-    if (rarityDiff !== 0) return rarityDiff;
-    return (a.cardName || "").localeCompare(b.cardName || "");
-  });
-
-  const best = currentUserCards[0];
-
-  pageTitle.textContent = username + "'s Binder";
-  totalCards.textContent = String(currentUserCards.length);
-  bestCard.textContent = best.cardName || "Unknown";
-  bestRarity.textContent = best.rarity || "-";
-  statusText.textContent = "Loaded binder for " + username;
-
-  renderRarityBreakdown();
-  renderCards();
-
-  const newUrl = window.location.pathname + "?user=" + encodeURIComponent(username);
-  window.history.replaceState({}, "", newUrl);
+* {
+  box-sizing: border-box;
 }
 
-function renderRarityBreakdown() {
-  const counts = {
-    Common: 0,
-    Rare: 0,
-    Super: 0,
-    Ultra: 0,
-    Secret: 0,
-    Collector: 0
-  };
-
-  currentUserCards.forEach(card => {
-    if (counts.hasOwnProperty(card.rarity)) {
-      counts[card.rarity]++;
-    }
-  });
-
-  rarityBreakdown.innerHTML = "";
-
-  rarityOrder.forEach(rarity => {
-    const count = counts[rarity];
-    const percent = currentUserCards.length > 0
-      ? Math.max(4, (count / currentUserCards.length) * 100)
-      : 0;
-
-    const row = document.createElement("div");
-    row.className = "rarity-row";
-    row.innerHTML = `
-      <div class="rarity-top">
-        <span>${rarity}</span>
-        <span>${count}</span>
-      </div>
-      <div class="rarity-bar-bg">
-        <div class="rarity-bar-fill" style="width:${percent}%"></div>
-      </div>
-    `;
-    rarityBreakdown.appendChild(row);
-  });
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0a0f1a;
+  color: #f3f4f6;
 }
 
-function renderCards() {
-  let filtered = currentUserCards;
-
-  if (currentFilter !== "All") {
-    filtered = currentUserCards.filter(card => card.rarity === currentFilter);
-  }
-
-  showingText.textContent = "Showing " + filtered.length + " cards";
-
-  if (filtered.length === 0) {
-    cardGrid.innerHTML = '<div class="empty-state">No cards match this filter.</div>';
-    return;
-  }
-
-  cardGrid.innerHTML = "";
-
-  filtered.forEach(card => {
-    const tile = document.createElement("div");
-    tile.className = "card-tile " + getGlowClass(card.rarity);
-
-    const img = document.createElement("img");
-    img.className = "card-image";
-    img.src = "images/" + card.cardId + ".jpg";
-    img.alt = card.cardName || "Card";
-    img.onerror = function () {
-      this.src = "https://placehold.co/300x420/111827/e5e7eb?text=No+Image";
-    };
-
-    const name = document.createElement("div");
-    name.className = "card-name";
-    name.textContent = card.cardName || "Unknown Card";
-
-    const rarity = document.createElement("div");
-    rarity.className = "card-rarity";
-    rarity.textContent = card.rarity || "Unknown";
-
-    tile.appendChild(img);
-    tile.appendChild(name);
-    tile.appendChild(rarity);
-
-    cardGrid.appendChild(tile);
-  });
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
 }
 
-function getGlowClass(rarity) {
-  switch (rarity) {
-    case "Rare": return "glow-rare";
-    case "Super": return "glow-super";
-    case "Ultra": return "glow-ultra";
-    case "Secret": return "glow-secret";
-    case "Collector": return "glow-collector";
-    default: return "glow-common";
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, #101827, #0b1220);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 8px 0;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+
+h1, h2 {
+  margin: 0;
+}
+
+.subtext {
+  margin-top: 10px;
+  color: #cbd5e1;
+  max-width: 700px;
+}
+
+.stats-top {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.stat-card {
+  min-width: 150px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.stat-label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.stat-value.small {
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.controls {
+  background: #0f172a;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.search-box label {
+  display: block;
+  margin-bottom: 8px;
+  color: #cbd5e1;
+  font-weight: bold;
+}
+
+.search-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.search-row input {
+  flex: 1;
+  min-width: 260px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #020617;
+  color: white;
+  font-size: 15px;
+}
+
+.search-row button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 12px;
+  background: #2563eb;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.search-row button:hover {
+  background: #1d4ed8;
+}
+
+.helper-text {
+  margin-top: 12px;
+  color: #94a3b8;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel {
+  background: #0f172a;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.rarity-list {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rarity-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.rarity-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.rarity-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.rarity-bar-fill {
+  height: 10px;
+  border-radius: 999px;
+  background: #e5e7eb;
+}
+
+.filter-buttons {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-btn {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: white;
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.binder-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+#showingText {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 18px;
+}
+
+.card-tile {
+  background: linear-gradient(180deg, #111827, #020617);
+  border-radius: 18px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card-tile:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.card-image {
+  width: 100%;
+  aspect-ratio: 0.72;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #111827;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.card-name {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1.3;
+  color: white;
+}
+
+.card-rarity {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.glow-common {
+  box-shadow: 0 0 0 rgba(255,255,255,0);
+}
+
+.glow-rare {
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.35);
+}
+
+.glow-super {
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.35);
+}
+
+.glow-ultra {
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.42);
+}
+
+.glow-secret {
+  box-shadow: 0 0 20px rgba(244, 114, 182, 0.42);
+}
+
+.glow-collector {
+  box-shadow: 0 0 22px rgba(251, 191, 36, 0.55);
+}
+
+.empty-state {
+  color: #94a3b8;
+  padding: 20px 0;
+}
+
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr;
   }
 }
