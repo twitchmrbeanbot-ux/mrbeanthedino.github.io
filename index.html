@@ -3,88 +3,93 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yu-Gi-Oh Binder</title>
+  <title>YGO Viewer Binder</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="page">
-
-    <nav class="site-nav">
-      <a class="nav-link active" href="index.html">Binder</a>
-      <a class="nav-link" href="leaderboard.html">Leaderboard</a>
-    </nav>
-
-    <header class="hero">
-      <div class="hero-left">
-        <p class="eyebrow">Yu-Gi-Oh Viewer Binder</p>
-        <h1 id="pageTitle">Yu-Gi-Oh Collection Binder</h1>
-        <p class="subtext">
-          Search a viewer name to load their owned cards, rarity totals, and best pull.
-        </p>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="brand-block">
+        <div class="eyebrow">Yu-Gi-Oh Viewer Project</div>
+        <h1 id="binder-title">Viewer Binder</h1>
+        <p class="subtitle">Search a viewer to load their owned cards, rarity totals, and best pull.</p>
       </div>
 
-      <div class="hero-right stats-top">
-        <div class="stat-card">
-          <span class="stat-label">Cards Owned</span>
-          <span class="stat-value" id="totalCards">0</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">Best Card</span>
-          <span class="stat-value small" id="bestCard">None</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">Best Rarity</span>
-          <span class="stat-value" id="bestRarity">-</span>
-        </div>
-      </div>
+      <nav class="site-nav">
+        <a href="index.html" class="active">Binder</a>
+        <a href="leaderboard.html">Leaderboard</a>
+      </nav>
     </header>
 
-    <section class="controls">
-      <div class="search-box">
-        <label for="usernameInput">Viewer Name</label>
+    <main class="binder-layout">
+      <section class="panel hero-panel">
         <div class="search-row">
-          <input type="text" id="usernameInput" placeholder="Enter Twitch username" />
-          <button id="loadBtn">Load Binder</button>
-        </div>
-      </div>
+          <div class="search-group">
+            <label for="viewerSearch">Viewer Name</label>
+            <input type="text" id="viewerSearch" placeholder="Enter viewer name" />
+          </div>
 
-      <div class="helper-text" id="statusText">
-        Collection loaded. Enter a viewer name.
-      </div>
-    </section>
-
-    <section class="content-grid">
-      <aside class="sidebar">
-        <div class="panel">
-          <h2>Rarity Breakdown</h2>
-          <div id="rarityBreakdown" class="rarity-list"></div>
+          <button id="loadBinderBtn" type="button">Load Binder</button>
         </div>
 
-        <div class="panel">
-          <h2>Filter</h2>
-          <div class="filter-buttons">
-            <button class="filter-btn active" data-rarity="All">All</button>
-            <button class="filter-btn" data-rarity="Common">Common</button>
-            <button class="filter-btn" data-rarity="Rare">Rare</button>
-            <button class="filter-btn" data-rarity="Super">Super</button>
-            <button class="filter-btn" data-rarity="Ultra">Ultra</button>
-            <button class="filter-btn" data-rarity="Secret">Secret</button>
-            <button class="filter-btn" data-rarity="Collector">Collector</button>
+        <div class="loaded-message" id="loadedMessage">Enter a viewer name to begin.</div>
+      </section>
+
+      <section class="stats-grid">
+        <div class="panel stat-panel">
+          <h2>Viewer Summary</h2>
+          <div class="stat-lines">
+            <div><strong>Cards Owned</strong> <span id="cardsOwned">0</span></div>
+            <div><strong>Best Card</strong> <span id="bestCard">-</span></div>
+            <div><strong>Best Rarity</strong> <span id="bestRarity">-</span></div>
+            <div><strong>Viewer Name</strong> <span id="viewerNameDisplay">-</span></div>
           </div>
         </div>
-      </aside>
 
-      <main class="main-panel panel">
-        <div class="binder-header">
+        <div class="panel stat-panel">
+          <h2>Rarity Breakdown</h2>
+          <div class="stat-lines">
+            <div><strong>Common</strong> <span id="rarityCommon">0</span></div>
+            <div><strong>Rare</strong> <span id="rarityRare">0</span></div>
+            <div><strong>Super</strong> <span id="raritySuper">0</span></div>
+            <div><strong>Ultra</strong> <span id="rarityUltra">0</span></div>
+            <div><strong>Secret</strong> <span id="raritySecret">0</span></div>
+            <div><strong>Collector</strong> <span id="rarityCollector">0</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Filter</h2>
+        <div class="filter-buttons" id="filter-buttons">
+          <button type="button" data-rarity="All" class="active-filter">All</button>
+          <button type="button" data-rarity="Common">Common</button>
+          <button type="button" data-rarity="Rare">Rare</button>
+          <button type="button" data-rarity="Super">Super</button>
+          <button type="button" data-rarity="Ultra">Ultra</button>
+          <button type="button" data-rarity="Secret">Secret</button>
+          <button type="button" data-rarity="Collector">Collector</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
           <h2>Binder Grid</h2>
-          <span id="showingText">Showing 0 cards</span>
+          <div class="section-meta" id="showingCount">Showing 0 cards</div>
         </div>
 
-        <div id="cardGrid" class="card-grid"></div>
-      </main>
-    </section>
+        <div id="card-grid" class="card-grid"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        This fan-made project is for entertainment only and is not affiliated with or endorsed by Konami.
+        Yu-Gi-Oh! and related names/images belong to their respective owners.
+      </p>
+    </footer>
   </div>
 
-  <script src="script.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>
