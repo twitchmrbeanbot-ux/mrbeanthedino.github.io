@@ -2,10 +2,12 @@ let allCards = [];
 let filteredCards = [];
 let activeViewer = "";
 let activeFilter = "All";
+let lastCollectionSnapshot = "";
 
 window.addEventListener("load", async function () {
   wireUi();
   await tryAutoLoadFromQuery();
+  setInterval(refreshActiveViewer, 15000);
 });
 
 function wireUi() {
@@ -51,7 +53,7 @@ async function tryAutoLoadFromQuery() {
   const input = document.getElementById("viewerSearch");
   if (input) input.value = viewer;
 
-  await loadViewer(viewer);
+  await loadViewer(viewer, true);
 }
 
 function loadViewerFromInput() {
@@ -59,10 +61,15 @@ function loadViewerFromInput() {
   const viewer = input ? input.value.trim() : "";
 
   if (!viewer) return;
-  loadViewer(viewer);
+  loadViewer(viewer, true);
 }
 
-async function loadViewer(viewerName) {
+async function refreshActiveViewer() {
+  if (!activeViewer) return;
+  await loadViewer(activeViewer, false);
+}
+
+async function loadViewer(viewerName, updateUrlFlag) {
   const loadedMessage = document.getElementById("loadedMessage");
 
   try {
@@ -70,12 +77,22 @@ async function loadViewer(viewerName) {
     if (!response.ok) throw new Error("Failed to load ygo_collection.json");
 
     const data = await response.json();
+    const snapshot = JSON.stringify(data);
     const cards = Array.isArray(data.cards) ? data.cards : [];
 
-    activeViewer = viewerName;
-    allCards = cards.filter(card =>
+    const viewerCards = cards.filter(card =>
       String(card.username || "").toLowerCase() === viewerName.toLowerCase()
     );
+
+    const viewerSnapshot = JSON.stringify(viewerCards);
+
+    if (!updateUrlFlag && viewerName === activeViewer && viewerSnapshot === lastCollectionSnapshot) {
+      return;
+    }
+
+    lastCollectionSnapshot = viewerSnapshot;
+    activeViewer = viewerName;
+    allCards = viewerCards;
 
     if (loadedMessage) {
       loadedMessage.textContent = allCards.length
@@ -84,14 +101,11 @@ async function loadViewer(viewerName) {
     }
 
     updateSummary(viewerName, allCards);
-    activeFilter = "All";
-
-    document.querySelectorAll("#filter-buttons button").forEach((b, index) => {
-      b.classList.toggle("active-filter", index === 0);
-    });
-
     applyFilterAndRender();
-    updateUrl(viewerName);
+
+    if (updateUrlFlag) {
+      updateUrl(viewerName);
+    }
 
   } catch (error) {
     console.error("Binder load error:", error);
@@ -234,5 +248,3 @@ function escapeHtml(text) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
-
-
