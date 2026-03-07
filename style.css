@@ -395,3 +395,56 @@ button:hover {
     gap: 14px;
   }
 }
+/* ===== Leaderboard polish ===== */
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(8, 12, 28, 0.78);
+  margin-top: 8px;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 16px 18px;
+  text-align: left;
+  font-size: 1.05rem;
+}
+
+.leaderboard-table th {
+  color: var(--gold);
+  background: rgba(255, 212, 92, 0.08);
+  border-bottom: 1px solid rgba(255, 224, 130, 0.2);
+}
+
+.leaderboard-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.leaderboard-table tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.leaderboard-table tr:hover {
+  background: rgba(255, 212, 92, 0.06);
+}
+
+#leaderboard-status {
+  margin: 0 0 16px 0;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+.viewer-link {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.viewer-link:hover {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
