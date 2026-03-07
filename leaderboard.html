@@ -8,30 +8,33 @@
 </head>
 <body>
   <div class="page">
-
-    <nav class="site-nav">
-      <a class="nav-link" href="index.html">Binder</a>
-      <a class="nav-link active" href="leaderboard.html">Leaderboard</a>
-    </nav>
-
-    <header class="hero">
-      <div class="hero-left">
-        <p class="eyebrow">Yu-Gi-Oh Viewer Leaderboard</p>
-        <h1>Top Collectors</h1>
-        <p class="subtext">
-          See who opened the most packs and who has the strongest pulls.
-        </p>
-      </div>
+    <header class="site-header">
+      <h1>Yu-Gi-Oh! Pack Leaderboard</h1>
+      <nav class="top-nav">
+        <a href="index.html">Binder</a>
+        <a href="leaderboard.html" class="active">Leaderboard</a>
+      </nav>
     </header>
 
-    <section class="panel">
-      <div class="binder-header">
-        <h2>Leaderboard</h2>
-        <span id="totalUsersText">Loading...</span>
-      </div>
+    <main class="leaderboard-container">
+      <p id="leaderboard-status">Loading...</p>
 
-      <div id="leaderboardTable"></div>
-    </section>
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>Packs Opened</th>
+            <th>Cards</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <tr>
+            <td colspan="4">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
   </div>
 
   <script src="leaderboard.js"></script>
