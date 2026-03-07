@@ -170,25 +170,23 @@ function renderCards(cards) {
   }
 
   grid.innerHTML = cards.map(card => {
-
-    // Use YGOProDeck image CDN
+    const rarity = normalizeRarity(card.rarity);
+    const rarityClass = `rarity-${rarity.toLowerCase()}`;
     const imageUrl = `https://images.ygoprodeck.com/images/cards/${card.cardId}.jpg`;
 
     return `
-      <div class="binder-card">
+      <div class="binder-card ${rarityClass}">
         <img
           src="${imageUrl}"
           alt="${escapeHtml(card.cardName || "Card")}"
           loading="lazy"
           onerror="this.onerror=null;this.src='https://images.ygoprodeck.com/images/cards/back.jpg';"
         />
-
         <div class="binder-card-name">
           ${escapeHtml(card.cardName || "Unknown Card")}
         </div>
-
-        <div class="binder-card-rarity">
-          ${escapeHtml(normalizeRarity(card.rarity))}
+        <div class="binder-card-rarity ${rarityClass}">
+          ${escapeHtml(rarity)}
         </div>
       </div>
     `;
@@ -236,4 +234,5 @@ function escapeHtml(text) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
 
