@@ -2,12 +2,11 @@ let allCards = [];
 let filteredCards = [];
 let activeViewer = "";
 let activeFilter = "All";
-let lastCollectionSnapshot = "";
 
 window.addEventListener("load", async function () {
   wireUi();
   await tryAutoLoadFromQuery();
-  setInterval(refreshActiveViewer, 15000);
+  setInterval(refreshActiveViewer, 10000);
 });
 
 function wireUi() {
@@ -77,27 +76,18 @@ async function loadViewer(viewerName, updateUrlFlag) {
     if (!response.ok) throw new Error("Failed to load ygo_collection.json");
 
     const data = await response.json();
-    const snapshot = JSON.stringify(data);
     const cards = Array.isArray(data.cards) ? data.cards : [];
 
-    const viewerCards = cards.filter(card =>
+    activeViewer = viewerName;
+    allCards = cards.filter(card =>
       String(card.username || "").toLowerCase() === viewerName.toLowerCase()
     );
 
-    const viewerSnapshot = JSON.stringify(viewerCards);
-
-    if (!updateUrlFlag && viewerName === activeViewer && viewerSnapshot === lastCollectionSnapshot) {
-      return;
-    }
-
-    lastCollectionSnapshot = viewerSnapshot;
-    activeViewer = viewerName;
-    allCards = viewerCards;
-
     if (loadedMessage) {
+      const now = new Date().toLocaleTimeString();
       loadedMessage.textContent = allCards.length
-        ? `Loaded binder for ${viewerName}`
-        : `No cards found for ${viewerName}`;
+        ? `Loaded binder for ${viewerName} • Updated ${now}`
+        : `No cards found for ${viewerName} • Checked ${now}`;
     }
 
     updateSummary(viewerName, allCards);
