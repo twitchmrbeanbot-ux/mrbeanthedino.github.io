@@ -1,8 +1,3 @@
-﻿{
-  "cards": [
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"40204620","cardName":"Megalith Promotion","rarity":"Rare","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"31440542","cardName":"Rafflesia Seduction","rarity":"Rare","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"38628859","cardName":"Dinomorphia Diplos","rarity":"Super","dateAdded":"2026-03-07"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":"3422200","cardName":"Crystron Sulfefnir","rarity":"Super","dateAdded":"2026-03-07"}
-  ]
+{
+  "cards": []
 }
