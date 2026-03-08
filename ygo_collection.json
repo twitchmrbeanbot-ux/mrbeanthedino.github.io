@@ -1,23 +1,3 @@
-﻿{
-  "cards": [
-    {"userId":"testuser1","username":"TestUser1","cardId":56713552,"cardName":"Obese Marmot of Nefariousness","rarity":"Super","dateAdded":"2026-03-08"},
-    {"userId":"testuser1","username":"TestUser1","cardId":50913601,"cardName":"Mountain","rarity":"Common","dateAdded":"2026-03-08"},
-    {"userId":"testuser2","username":"TestUser2","cardId":6924874,"cardName":"Harpie's Pet Baby Dragon","rarity":"Rare","dateAdded":"2026-03-08"},
-    {"userId":"testuser2","username":"TestUser2","cardId":7672244,"cardName":"Shien's Spy","rarity":"Common","dateAdded":"2026-03-08"},
-    {"userId":"testuser3","username":"TestUser3","cardId":10602628,"cardName":"Blackwing - Boreastorm the Wicked Wind","rarity":"Ultra","dateAdded":"2026-03-08"},
-    {"userId":"testuser3","username":"TestUser3","cardId":34149830,"cardName":"Desperate Tag","rarity":"Common","dateAdded":"2026-03-08"},
-    {"userId":"testuser4","username":"TestUser4","cardId":42598242,"cardName":"Special Hurricane","rarity":"Rare","dateAdded":"2026-03-08"},
-    {"userId":"testuser4","username":"TestUser4","cardId":40991587,"cardName":"The Lady in Wight","rarity":"Common","dateAdded":"2026-03-08"},
-    {"userId":"testuser5","username":"TestUser5","cardId":73648243,"cardName":"Sand Moth","rarity":"Rare","dateAdded":"2026-03-08"},
-    {"userId":"testuser5","username":"TestUser5","cardId":6367785,"cardName":"Eldeen","rarity":"Common","dateAdded":"2026-03-08"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":99991455,"cardName":"Raijin the Breakbolt Star","rarity":"Ultra","dateAdded":"2026-03-08"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":73431236,"cardName":"Iron Blacksmith Kotetsu","rarity":"Rare","dateAdded":"2026-03-08"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":93850690,"cardName":"Swordsoul Sacred Summit","rarity":"Ultra","dateAdded":"2026-03-08"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":26669055,"cardName":"Sage of Silence","rarity":"Rare","dateAdded":"2026-03-08"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":51650038,"cardName":"Madolche Dessert","rarity":"Common","dateAdded":"2026-03-08"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":39531794,"cardName":"Brain Hazard","rarity":"Rare","dateAdded":"2026-03-08"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":10678778,"cardName":"Aegaion the Sea Castrum","rarity":"Common","dateAdded":"2026-03-08"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":94076521,"cardName":"Cartorhyn the Hidden Gem of the Seafront","rarity":"Rare","dateAdded":"2026-03-08"},
-    {"userId":"694889890","username":"MrBeanTheDino","cardId":58543073,"cardName":"Speedroid Dupligate","rarity":"Rare","dateAdded":"2026-03-08"}
-  ]
+{
+  "cards": []
 }
