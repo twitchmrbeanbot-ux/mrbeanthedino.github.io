@@ -10,7 +10,10 @@ async function loadLeaderboard() {
   const leaderboardStatus = document.getElementById("leaderboard-status");
 
   try {
-    const response = await fetch("./ygo_stats.json?t=" + Date.now());
+    // ✅ FIX: Added cache: "no-store" to match script.js and prevent stale cache
+    const response = await fetch("./ygo_stats.json?t=" + Date.now(), {
+      cache: "no-store"
+    });
 
     if (!response.ok) {
       throw new Error("Failed to load ygo_stats.json");
@@ -39,35 +42,50 @@ async function loadLeaderboard() {
       });
 
     if (!rankings.length) {
-      leaderboardStatus.textContent = "No leaderboard data found.";
-      leaderboardBody.innerHTML = `
-        <tr>
-          <td colspan="4">No users found.</td>
-        </tr>
-      `;
+      // ✅ FIX: null-check before use, reset display so message is visible
+      if (leaderboardStatus) {
+        leaderboardStatus.style.display = "";
+        leaderboardStatus.textContent = "No leaderboard data found.";
+      }
+      if (leaderboardBody) {
+        leaderboardBody.innerHTML = `
+          <tr>
+            <td colspan="4">No users found.</td>
+          </tr>
+        `;
+      }
       return;
     }
 
-    leaderboardStatus.style.display = "none";
+    // ✅ FIX: null-check before hiding status
+    if (leaderboardStatus) {
+      leaderboardStatus.style.display = "none";
+    }
 
-    leaderboardBody.innerHTML = rankings.map((user, index) => `
-      <tr>
-        <td>${rankBadge(index + 1)}</td>
-        <td>
-          <a class="viewer-link" href="index.html?viewer=${encodeURIComponent(user.username || "")}">
-            ${escapeHtml(user.username || "Unknown User")}
-          </a>
-        </td>
-        <td>${user.packsOpened || 0}</td>
-        <td>${user.totalCards || 0}</td>
-      </tr>
-    `).join("");
+    if (leaderboardBody) {
+      leaderboardBody.innerHTML = rankings.map((user, index) => `
+        <tr>
+          <td>${rankBadge(index + 1)}</td>
+          <td>
+            <a class="viewer-link" href="index.html?viewer=${encodeURIComponent(user.username || "")}">
+              ${escapeHtml(user.username || "Unknown User")}
+            </a>
+          </td>
+          <td>${user.packsOpened || 0}</td>
+          <td>${user.totalCards || 0}</td>
+        </tr>
+      `).join("");
+    }
 
   } catch (error) {
     console.error("Leaderboard load error:", error);
+
+    // ✅ FIX: Reset display so error message is actually visible
     if (leaderboardStatus) {
+      leaderboardStatus.style.display = "";
       leaderboardStatus.textContent = "Failed to load leaderboard.";
     }
+
     if (leaderboardBody) {
       leaderboardBody.innerHTML = `
         <tr>
