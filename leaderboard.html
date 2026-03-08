@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YGO Pack Leaderboard</title>
-  <link rel="stylesheet" href="style.css?v=11" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body>
   <div class="site-shell">
@@ -14,40 +14,38 @@
         <h1>Pack Leaderboard</h1>
         <p class="subtitle">Track pack openings and click a viewer name to open their binder.</p>
       </div>
-
       <nav class="site-nav">
         <a href="index.html">Binder</a>
         <a href="leaderboard.html" class="active">Leaderboard</a>
       </nav>
     </header>
-
     <main class="binder-layout">
       <section class="panel">
         <div class="section-head">
           <h2>Top Pack Openers</h2>
           <div class="section-meta">Live viewer rankings</div>
         </div>
-
         <p id="leaderboard-status">Loading leaderboard...</p>
-
-        <table class="leaderboard-table">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Viewer</th>
-              <th>Packs Opened</th>
-              <th>Cards</th>
-            </tr>
-          </thead>
-          <tbody id="leaderboard-body">
-            <tr>
-              <td colspan="4">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- ✅ FIX: Wrapper div added so border-radius renders correctly on the table -->
+        <div class="leaderboard-table-wrap">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Viewer</th>
+                <th>Packs Opened</th>
+                <th>Cards</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <tr>
+                <td colspan="4">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
     </main>
-
     <footer class="site-footer">
       <p>
         This fan-made project is for entertainment only and is not affiliated with or endorsed by Konami.
@@ -55,7 +53,7 @@
       </p>
     </footer>
   </div>
-
-  <script src="./leaderboard.js?v=11"></script>
+  <!-- ✅ FIX: Version bumped to v=13 to match corrected CSS and JS -->
+  <script src="./leaderboard.js?v=13"></script>
 </body>
 </html>
