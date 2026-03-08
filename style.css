@@ -80,6 +80,28 @@ body::after {
   }
 }
 
+/* ✅ FIX: Respect reduced motion preference for all animations */
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+  }
+
+  .binder-card:hover::before {
+    animation: none;
+    opacity: 1;
+  }
+
+  .rarity-secret:hover,
+  .rarity-collector:hover {
+    animation: none;
+  }
+
+  .leaderboard-table tbody tr:nth-child(1) {
+    animation: none;
+  }
+}
+
 .site-shell {
   position: relative;
   z-index: 1;
@@ -255,6 +277,15 @@ button:hover {
   filter: brightness(1.08);
   transform: translateY(-1px);
   box-shadow: 0 0 14px rgba(140, 92, 255, 0.22);
+}
+
+/* ✅ FIX: Disabled button state for loading feedback */
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+  box-shadow: none;
 }
 
 .loaded-message {
@@ -442,26 +473,48 @@ button:hover {
     0 0 26px rgba(255, 255, 255, 0.08);
 }
 
-.rarity-secret:hover,
-.rarity-collector:hover {
-  animation: rarePulse 1.8s ease-in-out infinite;
+/* ✅ FIX: Secret uses correct pink pulse, Collector keeps gold */
+.rarity-secret:hover {
+  animation: secretPulse 1.8s ease-in-out infinite;
 }
 
-@keyframes rarePulse {
+.rarity-collector:hover {
+  animation: collectorPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes secretPulse {
   0% {
     box-shadow:
       0 10px 24px rgba(0,0,0,0.34),
-      0 0 14px rgba(255, 210, 90, 0.14);
+      0 0 14px rgba(255, 120, 190, 0.16);
   }
   50% {
     box-shadow:
       0 12px 28px rgba(0,0,0,0.38),
-      0 0 22px rgba(255, 210, 90, 0.28);
+      0 0 22px rgba(255, 120, 190, 0.36);
   }
   100% {
     box-shadow:
       0 10px 24px rgba(0,0,0,0.34),
-      0 0 14px rgba(255, 210, 90, 0.14);
+      0 0 14px rgba(255, 120, 190, 0.16);
+  }
+}
+
+@keyframes collectorPulse {
+  0% {
+    box-shadow:
+      0 10px 24px rgba(0,0,0,0.34),
+      0 0 16px rgba(255, 235, 150, 0.18);
+  }
+  50% {
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.38),
+      0 0 26px rgba(255, 235, 150, 0.38);
+  }
+  100% {
+    box-shadow:
+      0 10px 24px rgba(0,0,0,0.34),
+      0 0 16px rgba(255, 235, 150, 0.18);
   }
 }
 
@@ -495,11 +548,15 @@ button:hover {
   color: var(--muted);
 }
 
+/* ✅ FIX: Wrap table in a container to allow border-radius to render correctly */
+.leaderboard-table-wrap {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
 .leaderboard-table {
   width: 100%;
   border-collapse: collapse;
-  overflow: hidden;
-  border-radius: 16px;
   background: rgba(8, 12, 28, 0.78);
 }
 
