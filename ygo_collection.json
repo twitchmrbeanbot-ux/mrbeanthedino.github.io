@@ -1,3 +1,6 @@
-{
-  "cards": []
+﻿{
+  "cards": [
+    {"userId":"694889890","username":"MrBeanTheDino","cardId":51447164,"cardName":"T.G. Blade Blaster","rarity":"Ultra","dateAdded":"2026-03-08"},
+    {"userId":"694889890","username":"MrBeanTheDino","cardId":58761791,"cardName":"Shipping Error","rarity":"Common","dateAdded":"2026-03-08"}
+  ]
 }
