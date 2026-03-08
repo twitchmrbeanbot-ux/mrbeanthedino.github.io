@@ -1,9 +1,10 @@
-console.log("NEW script.js loaded v12");
+console.log("NEW script.js loaded v13");
 
 let allCards = [];
 let filteredCards = [];
 let activeViewer = "";
 let activeFilter = "All";
+let autoRefreshInterval = null;
 
 window.addEventListener("load", async function () {
   console.log("Binder page booted");
@@ -11,11 +12,11 @@ window.addEventListener("load", async function () {
   wireUi();
   await tryAutoLoadFromQuery();
 
-  // Auto refresh every 15 seconds if a viewer is loaded
-  setInterval(function () {
+  // Auto refresh every 15 seconds if a viewer is loaded — silently re-fetches data only
+  autoRefreshInterval = setInterval(function () {
     if (activeViewer) {
       console.log("Auto reloading binder for viewer:", activeViewer);
-      window.location.reload();
+      loadViewer(activeViewer, false); // ✅ FIX: no longer nukes the whole page
     }
   }, 15000);
 });
@@ -79,6 +80,13 @@ function loadViewerFromInput() {
 async function loadViewer(viewerName, updateUrlFlag) {
 
   const loadedMessage = document.getElementById("loadedMessage");
+  const loadBtn = document.getElementById("loadBinderBtn");
+
+  // ✅ FIX: Disable button during fetch to prevent spam clicks
+  if (loadBtn) {
+    loadBtn.disabled = true;
+    loadBtn.textContent = "Loading...";
+  }
 
   try {
 
@@ -117,6 +125,14 @@ async function loadViewer(viewerName, updateUrlFlag) {
 
     if (loadedMessage) {
       loadedMessage.textContent = "Failed to load binder data.";
+    }
+
+  } finally {
+
+    // ✅ FIX: Always re-enable button whether fetch succeeded or failed
+    if (loadBtn) {
+      loadBtn.disabled = false;
+      loadBtn.textContent = "Load Binder";
     }
   }
 }
@@ -220,7 +236,8 @@ function renderCards(cards) {
 
 function normalizeRarity(rarity) {
 
-  const r = String(rarity || "").toLowerCase();
+  // ✅ FIX: trim() before toLowerCase() so "ultra " doesn't fall through to Common
+  const r = String(rarity || "").trim().toLowerCase();
 
   if (r === "rare") return "Rare";
   if (r === "super") return "Super";
