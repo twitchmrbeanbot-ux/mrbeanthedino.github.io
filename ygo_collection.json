@@ -1,3 +1,7 @@
-{
-  "cards": []
+﻿{
+  "cards": [
+    {"userId":"694889890","username":"MrBeanTheDino","cardId":"42421606","cardName":"Number 85: Crazy Box","rarity":"Super","dateAdded":"2026-03-07"},
+    {"userId":"694889890","username":"MrBeanTheDino","cardId":"68875140","cardName":"Hard-sellin' Goblin","rarity":"Common","dateAdded":"2026-03-07"},
+    {"userId":"694889890","username":"MrBeanTheDino","cardId":"8124921","cardName":"Right Leg of the Forbidden One","rarity":"Secret","dateAdded":"2026-03-07"}
+  ]
 }
