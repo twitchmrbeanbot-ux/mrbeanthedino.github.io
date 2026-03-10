@@ -1,6 +1,8 @@
 ﻿{
   "cards": [
     {"userId":"409042377","username":"Shadow_Bane97","cardId":80723580,"cardName":"Giant Trap Hole","rarity":"Rare","dateAdded":"2026-03-10"},
-    {"userId":"409042377","username":"Shadow_Bane97","cardId":26561172,"cardName":"Myutant Mutant","rarity":"Common","dateAdded":"2026-03-10"}
+    {"userId":"409042377","username":"Shadow_Bane97","cardId":26561172,"cardName":"Myutant Mutant","rarity":"Common","dateAdded":"2026-03-10"},
+    {"userId":"409042377","username":"Shadow_Bane97","cardId":34614289,"cardName":"U.A. Blockbacker","rarity":"Rare","dateAdded":"2026-03-10"},
+    {"userId":"409042377","username":"Shadow_Bane97","cardId":101305027,"cardName":"Black Chaos the Dark Chaos Magician","rarity":"Common","dateAdded":"2026-03-10"}
   ]
 }
