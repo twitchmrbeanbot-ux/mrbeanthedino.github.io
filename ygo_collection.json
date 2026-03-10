@@ -1,3 +1,6 @@
-{
-  "cards": []
+﻿{
+  "cards": [
+    {"userId":"409042377","username":"Shadow_Bane97","cardId":80723580,"cardName":"Giant Trap Hole","rarity":"Rare","dateAdded":"2026-03-10"},
+    {"userId":"409042377","username":"Shadow_Bane97","cardId":26561172,"cardName":"Myutant Mutant","rarity":"Common","dateAdded":"2026-03-10"}
+  ]
 }
