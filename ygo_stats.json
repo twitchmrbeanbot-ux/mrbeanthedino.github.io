@@ -1,12 +1,5 @@
 ﻿{
   "leaderboard": [
-    {"username":"ImEighth","packsOpened":3,"totalCards":6,"bestCard":"Ariel, Priestess of the Nekroz","bestRarity":"Ultra"},
-    {"username":"Shadow_Bane97","packsOpened":3,"totalCards":6,"bestCard":"Dragunity Draft","bestRarity":"Ultra"},
-    {"username":"minimatchaa","packsOpened":2,"totalCards":4,"bestCard":"Soul-Absorbing Bone Tower","bestRarity":"Rare"},
-    {"username":"LivingCorpseTattoo","packsOpened":2,"totalCards":4,"bestCard":"Falling Down","bestRarity":"Super"},
-    {"username":"pistoffy","packsOpened":2,"totalCards":4,"bestCard":"Red-Eyes Black Dragon","bestRarity":"Secret"},
-    {"username":"popsongaming","packsOpened":1,"totalCards":2,"bestCard":"Assault Beast","bestRarity":"Rare"},
-    {"username":"that_asian_concentration","packsOpened":1,"totalCards":2,"bestCard":"Overlay Booster","bestRarity":"Rare"},
-    {"username":"ANIW0LF","packsOpened":1,"totalCards":2,"bestCard":"Chirubimé, Princess of Autumn Leaves","bestRarity":"Super"}
+    {"username":"that_asian_concentration","packsOpened":1,"totalCards":2,"bestCard":"Xtra HERO Dread Decimator","bestRarity":"Ultra"}
   ]
 }
