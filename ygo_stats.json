@@ -1,5 +1,27 @@
 ﻿{
   "leaderboard": [
-    {"userId":"mrbeanthedino","username":"MrBeanTheDino","packsOpened":1,"totalCards":2,"bestCard":"Diamond-Dust Cyclone","bestRarity":"Rare"}
+    {"userId":"409042377","username":"Shadow_Bane97","packsOpened":15,"totalCards":30,"bestCard":"Dragunity Draft","bestRarity":"Ultra"},
+    {"userId":"698909414","username":"popsongaming","packsOpened":3,"totalCards":6,"bestCard":"Sacred Sword of Seven Stars","bestRarity":"Super"},
+    {"userId":"277880495","username":"GoEvan101New","packsOpened":4,"totalCards":8,"bestCard":"Dark Resonator","bestRarity":"Rare"},
+    {"userId":"28587782","username":"iamfiref1y","packsOpened":3,"totalCards":6,"bestCard":"Underworld Fighter Balmung","bestRarity":"Super"},
+    {"userId":"810376108","username":"ImEighth","packsOpened":17,"totalCards":34,"bestCard":"Re-Cover","bestRarity":"Ultra"},
+    {"userId":"208179738","username":"E1337_13","packsOpened":3,"totalCards":6,"bestCard":"Vision Release","bestRarity":"Ultra"},
+    {"userId":"694889890","username":"MrBeanTheDino","packsOpened":1,"totalCards":2,"bestCard":"Mataza the Zapper","bestRarity":"Rare"},
+    {"userId":"65511441","username":"mrshotgunjr","packsOpened":7,"totalCards":14,"bestCard":"Dark Highlander","bestRarity":"Ultra"},
+    {"userId":"134040508","username":"LivingCorpseTattoo","packsOpened":21,"totalCards":41,"bestCard":"Sacred Phoenix of Nephthys","bestRarity":"Secret"},
+    {"userId":"448196414","username":"that_asian_concentration","packsOpened":15,"totalCards":30,"bestCard":"Enishi, Shien's Chancellor","bestRarity":"Ultra"},
+    {"userId":"176825532","username":"l3monss11","packsOpened":1,"totalCards":2,"bestCard":"Scrap Worm","bestRarity":"Rare"},
+    {"userId":"445162992","username":"minimatchaa","packsOpened":5,"totalCards":10,"bestCard":"Caravan of the Ice Barrier","bestRarity":"Super"},
+    {"userId":"613750631","username":"ANIW0LF","packsOpened":2,"totalCards":4,"bestCard":"Ghost Fusion","bestRarity":"Ultra"},
+    {"userId":"1110369249","username":"pistoffy","packsOpened":5,"totalCards":10,"bestCard":"Red-Eyes Black Dragon","bestRarity":"Secret"},
+    {"userId":"591226329","username":"Loading_Personality","packsOpened":13,"totalCards":26,"bestCard":"D/D/D/D Super-Dimensional Sovereign Emperor Zero Paradox","bestRarity":"Ultra"},
+    {"userId":"495502527","username":"duhialwayswin","packsOpened":1,"totalCards":2,"bestCard":"Electric Jellyfish","bestRarity":"Super"},
+    {"userId":"621914186","username":"akaEvoke","packsOpened":1,"totalCards":2,"bestCard":"Dragon Dowser","bestRarity":"Rare"},
+    {"userId":"837619137","username":"StrikerSpud","packsOpened":4,"totalCards":8,"bestCard":"Gladiator Beast Domitianus","bestRarity":"Ultra"},
+    {"userId":"954236839","username":"rustyscissorhand","packsOpened":1,"totalCards":2,"bestCard":"Qliphort Cephalopod","bestRarity":"Super"},
+    {"userId":"402337290","username":"Sery_Bot","packsOpened":1,"totalCards":2,"bestCard":"Abyss Script - Abysstainment","bestRarity":"Ultra"},
+    {"userId":"662760911","username":"viperz_ming","packsOpened":1,"totalCards":2,"bestCard":"The Weather Rainy Canvas","bestRarity":"Super"},
+    {"userId":"714168680","username":"999_damond","packsOpened":1,"totalCards":2,"bestCard":"Special Hurricane","bestRarity":"Rare"},
+    {"userId":"565479788","username":"pope_julian","packsOpened":1,"totalCards":2,"bestCard":"Master of Oz","bestRarity":"Rare"}
   ]
 }
