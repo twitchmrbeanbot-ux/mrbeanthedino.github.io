@@ -47,6 +47,7 @@
     {"userId":"moddinobot","username":"ModDinoBot","packsOpened":1,"totalCards":1,"bestCard":"Performage Damage Juggler","bestRarity":"Ultra"},
     {"userId":"awakammm","username":"awakammm","packsOpened":2,"totalCards":3,"bestCard":"Judgment of the Pharaoh","bestRarity":"Ultra"},
     {"userId":"blerp","username":"blerp","packsOpened":2,"totalCards":3,"bestCard":"Malefic Divide","bestRarity":"Ultra"},
-    {"userId":"silvie","username":"silvie","packsOpened":2,"totalCards":3,"bestCard":"Flying Kamakiri #1","bestRarity":"Secret"}
+    {"userId":"silvie","username":"silvie","packsOpened":2,"totalCards":3,"bestCard":"Flying Kamakiri #1","bestRarity":"Secret"},
+    {"userId":"someone","username":"someone","packsOpened":1,"totalCards":2,"bestCard":"Maniacal Servant","bestRarity":"Rare"}
   ]
 }
