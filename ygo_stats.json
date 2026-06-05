@@ -49,6 +49,7 @@
     {"userId":"blerp","username":"blerp","packsOpened":2,"totalCards":3,"bestCard":"Malefic Divide","bestRarity":"Ultra"},
     {"userId":"silvie","username":"silvie","packsOpened":2,"totalCards":3,"bestCard":"Flying Kamakiri #1","bestRarity":"Secret"},
     {"userId":"someone","username":"someone","packsOpened":1,"totalCards":2,"bestCard":"Maniacal Servant","bestRarity":"Rare"},
-    {"userId":"kiroantics","username":"kiroantics","packsOpened":1,"totalCards":2,"bestCard":"Elemental HERO Wildheart","bestRarity":"Secret"}
+    {"userId":"kiroantics","username":"kiroantics","packsOpened":1,"totalCards":2,"bestCard":"Elemental HERO Wildheart","bestRarity":"Secret"},
+    {"userId":"shytruffleiqr","username":"shytruffleiqr","packsOpened":1,"totalCards":2,"bestCard":"Monster Recovery","bestRarity":"Rare"}
   ]
 }
